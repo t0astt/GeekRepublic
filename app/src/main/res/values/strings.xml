@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Geek Republic</string>
+
+    <string name="navigation_drawer_home">Home</string>
+    <string name="navigation_drawer_news">News</string>
+    <string name="navigation_drawer_security">Security</string>
+    <string name="navigation_drawer_gaming">Gaming</string>
+    <string name="navigation_drawer_mobile">Mobile</string>
+    <string name="navigation_drawer_technology">Technology</string>
+    <string name="navigation_drawer_culture">Culture</string>
+    <string name="navigation_drawer_gadgets">Gadgets</string>
+    <string name="navigation_drawer_more">More</string>
+    <string name="navigation_drawer_facebook">Facebook</string>
+    <string name="navigation_drawer_twitter">Twitter</string>
+    <string name="navigation_drawer_googleplus">Google+</string>
+    <string name="navigation_drawer_contactus">Contact Us</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
