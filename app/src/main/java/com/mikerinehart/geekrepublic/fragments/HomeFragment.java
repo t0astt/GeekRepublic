@@ -3,6 +3,7 @@ package com.mikerinehart.geekrepublic.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -12,8 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.malinskiy.superrecyclerview.OnMoreListener;
-import com.malinskiy.superrecyclerview.SuperRecyclerView;
-import com.mikerinehart.geekrepublic.Constants;
+import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.mikerinehart.geekrepublic.R;
 import com.mikerinehart.geekrepublic.RestClient;
 import com.mikerinehart.geekrepublic.adapters.PostAdapter;
@@ -30,8 +30,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnMoreListener {
-    @InjectView(R.id.home_recyclerview) SuperRecyclerView mRecyclerView;
+public class HomeFragment extends Fragment {
+    @InjectView(R.id.home_recyclerview) UltimateRecyclerView mUltimateRecyclerView;
     LinearLayoutManager mLayoutManager;
     PostAdapter mAdapter;
     RestClient mRestClient;
@@ -52,6 +52,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onCreate(savedInstanceState);
         mRestClient = new RestClient();
         mApiService = mRestClient.getApiService();
+        mAdapter = new PostAdapter();
     }
 
     @DebugLog
@@ -61,26 +62,27 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.inject(this, view);
 
-        mLayoutManager = new LinearLayoutManager(mRecyclerView.getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setRefreshListener(this);
-        mRecyclerView.setRefreshingColorResources(android.R.color.holo_orange_light, android.R.color.holo_blue_light, android.R.color.holo_green_light, android.R.color.holo_red_light);
-        mRecyclerView.setupMoreListener(this, 1);
+        mLayoutManager = new LinearLayoutManager(mUltimateRecyclerView.getContext());
+        mUltimateRecyclerView.setLayoutManager(mLayoutManager);
+        mUltimateRecyclerView.enableLoadmore();
+        mUltimateRecyclerView.setOnLoadMoreListener(new UltimateRecyclerView.OnLoadMoreListener() {
+            @Override
+            public void loadMore(int itemsCount, int maxLastVisiblePosition) {
+                getMorePosts();
+            }
+        });
+        mAdapter.setCustomLoadMoreView(LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.view_more_progress, null));
+        mUltimateRecyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getPosts();
+                mUltimateRecyclerView.setRefreshing(false);
+            }
+        });
 
         getPosts();
 
         return view;
-    }
-
-    @Override
-    public void onRefresh() {
-        getPosts();
-    }
-
-    @Override
-    public void onMoreAsked(int numberOfItems, int numberBeforeMore, int currentItemPos) {
-        getMorePosts();
-        Log.i("HomeFragment", "Getting more posts");
     }
 
     private void getPosts() {
@@ -88,8 +90,8 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void success(List<Post> posts, Response response) {
 
-                mAdapter = new PostAdapter();
-                mRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
+
+                mUltimateRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
                 mPageNumber++;
                 for (int i = 0; i < posts.size(); i++) {
                     mAdapter.add(i, posts.get(i));
@@ -116,7 +118,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 }
                 Log.i("Shit", "TotalItemCount" + mLayoutManager.getItemCount());
                 Log.i("Shit", "Last visible item position" + mLayoutManager.findLastVisibleItemPosition());
-                mRecyclerView.hideMoreProgress();
                 mAdapter.notifyDataSetChanged();
             }
 

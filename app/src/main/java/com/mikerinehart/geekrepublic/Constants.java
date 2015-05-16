@@ -5,6 +5,6 @@ package com.mikerinehart.geekrepublic;
  */
 public class Constants {
 
-    public static final int POSTS_TO_DISPLAY = 50;
+    public static final int POSTS_TO_DISPLAY = 10;
 
 }

@@ -6,12 +6,19 @@
     android:layout_height="match_parent"
     tools:context="com.mikerinehart.geekrepublic.fragments.HomeFragment">
 
-    <com.malinskiy.superrecyclerview.SuperRecyclerView
+    <com.marshalchen.ultimaterecyclerview.UltimateRecyclerView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/home_recyclerview"
-        app:layout_moreProgress="@layout/view_more_progress" >
-    </com.malinskiy.superrecyclerview.SuperRecyclerView>
+        android:id="@+id/home_recyclerview">
+    </com.marshalchen.ultimaterecyclerview.UltimateRecyclerView>
+
+
+    <!--<com.malinskiy.superrecyclerview.SuperRecyclerView-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:id="@+id/home_recyclerview"-->
+        <!--app:layout_moreProgress="@layout/view_more_progress" >-->
+    <!--</com.malinskiy.superrecyclerview.SuperRecyclerView>-->
 
 
 </RelativeLayout>

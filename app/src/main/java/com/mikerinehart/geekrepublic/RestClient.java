@@ -26,7 +26,6 @@ public class RestClient {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(BASE_URL)
-//                .setConverter(new GsonConverter(gson))
                 .build();
 
         apiService = restAdapter.create(ApiService.class);
