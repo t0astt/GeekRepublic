@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,6 +64,45 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
                         if (drawerItem instanceof Nameable) {
                             Toast.makeText(getApplicationContext(), MainActivity.this.getString(((Nameable)drawerItem).getNameRes()), Toast.LENGTH_SHORT).show();
+                            Log.i("Drawer", position + "");
+                            switch (position) {
+                                // Home
+                                case 0:
+                                    break;
+                                // News
+                                case 1:
+                                    break;
+                                // Security
+                                case 2:
+                                    break;
+                                // Gaming
+                                case 3:
+                                    break;
+                                // Mobile
+                                case 4:
+                                    break;
+                                // Technology
+                                case 5:
+                                    break;
+                                // Culture
+                                case 6:
+                                    break;
+                                // Gadgets
+                                case 7:
+                                    break;
+                                // Facebook
+                                case 9:
+                                    break;
+                                // Twitter
+                                case 10:
+                                    break;
+                                // Google+
+                                case 11:
+                                    break;
+                                // Contact Us
+                                case 12:
+                                    break;
+                            }
                         }
                     }
                 })
