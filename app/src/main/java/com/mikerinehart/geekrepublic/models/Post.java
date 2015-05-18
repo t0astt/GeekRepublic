@@ -19,7 +19,7 @@ public class Post {
 //    @SerializedName("name") private String name;
 //    @SerializedName("author") private Author author;
 //    @SerializedName("password") private String password;
-//    @SerializedName("content") private String content;
+    @SerializedName("content") private String content;
 //    @SerializedName("excerpt") private String excerpt;
 //    @SerializedName("content_raw") private String contentRaw;
 //    @SerializedName("except_raw") private String excerptRaw;
@@ -36,10 +36,11 @@ public class Post {
 //    @SerializedName("post_meta") private Metadata metadata;
 //    @SerializedName("meta") private Meta meta;
 
-    public Post(int id, String title, FeaturedImage featuredImage) {
+    public Post(int id, String title, FeaturedImage featuredImage, String content) {
         this.id = id;
         this.title = title;
         this.featuredImage = featuredImage;
+        this.content = content;
     }
 
 
@@ -132,9 +133,9 @@ public class Post {
 //        return password;
 //    }
 //
-//    public String getContent() {
-//        return content;
-//    }
+    public String getContent() {
+        return content;
+    }
 //
 //    public String getExcerpt() {
 //        return excerpt;

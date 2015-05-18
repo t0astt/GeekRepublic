@@ -1,13 +1,17 @@
 package com.mikerinehart.geekrepublic.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -16,6 +20,7 @@ import com.malinskiy.superrecyclerview.OnMoreListener;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.mikerinehart.geekrepublic.R;
 import com.mikerinehart.geekrepublic.RestClient;
+import com.mikerinehart.geekrepublic.activities.ArticleActivity;
 import com.mikerinehart.geekrepublic.adapters.PostAdapter;
 import com.mikerinehart.geekrepublic.interfaces.ApiService;
 import com.mikerinehart.geekrepublic.models.Post;
@@ -77,6 +82,37 @@ public class HomeFragment extends Fragment {
             public void onRefresh() {
                 getPosts();
                 mUltimateRecyclerView.setRefreshing(false);
+            }
+        });
+
+        final GestureDetector mGestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                return true;
+            }
+        });
+        mUltimateRecyclerView.mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                ViewGroup child = (ViewGroup)rv.findChildViewUnder(e.getX(), e.getY());
+
+                if (child != null && mGestureDetector.onTouchEvent(e)) {
+                    int itemClicked = rv.getChildPosition(child);
+
+                    Post p = mAdapter.getPost(itemClicked);
+                    Intent intent = new Intent(getActivity(), ArticleActivity.class);
+                    intent.putExtra("articleTitle", p.getTitle());
+                    intent.putExtra("articleContent", p.getContent());
+                    intent.putExtra("articleFeaturedImageURL", p.getFeaturedImage().getSourceURL());
+                    startActivity(intent);
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
             }
         });
 

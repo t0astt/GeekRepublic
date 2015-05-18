@@ -55,6 +55,10 @@ public class PostAdapter extends UltimateViewAdapter {
         return position;
     }
 
+    public Post getPost(int position) {
+        return postList.get(position);
+    }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder vh, int i) {
         Post p = postList.get(i);
@@ -77,7 +81,6 @@ public class PostAdapter extends UltimateViewAdapter {
         return new ViewHolder(itemView);
     }
 
-    //Holds the Ride cardviews
     class ViewHolder extends UltimateRecyclerviewViewHolder {
         @InjectView(R.id.post_card) protected CardView postCard;
         @InjectView(R.id.post_card_layout_post_title) protected TextView postTitle;

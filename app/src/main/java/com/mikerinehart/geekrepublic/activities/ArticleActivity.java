@@ -1,36 +1,117 @@
 package com.mikerinehart.geekrepublic.activities;
 
-import android.app.Fragment;
-import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
+import com.manuelpeinado.fadingactionbar.view.ObservableScrollable;
+import com.manuelpeinado.fadingactionbar.view.OnScrollChangedCallback;
 import com.mikerinehart.geekrepublic.R;
-import com.mikerinehart.geekrepublic.fragments.HomeFragment;
 
-public class ArticleActivity extends AppCompatActivity {
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
+public class ArticleActivity extends ActionBarActivity implements OnScrollChangedCallback {
+
+    Intent mIntent;
+    String articleTitle;
+    String articleContent;
+    String articleFeaturedImageURL;
+
+    private int mLastDampedScroll;
+    private int mInitialStatusBarColor;
+
+    @InjectView(R.id.toolbar) Toolbar mToolbar;
+    @InjectView(R.id.article_title) TextView mArticleTitleTextView;
+    @InjectView(R.id.article_content) TextView mArticleContentTextView;
+    @InjectView(R.id.header) ImageView mArticleHeader;
+    @InjectView(R.id.article_scrollview) ObservableScrollable mScrollView;
+    Drawable mActionBarBackgroundDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
+        ButterKnife.inject(this);
 
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.layout_container, new ArticleFragment())
-                        .commit();
-            }
-        });
+        mActionBarBackgroundDrawable = mToolbar.getBackground();
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mScrollView.setOnScrollChangedCallback(this);
+
+        onScroll(-1, 0);
+
+        mIntent = getIntent();
+        articleTitle = mIntent.getStringExtra("articleTitle");
+        articleContent = mIntent.getStringExtra("articleContent");
+        articleFeaturedImageURL = mIntent.getStringExtra("articleFeaturedImageURL");
+
+        Log.i("Article View", articleFeaturedImageURL);
+
+        getSupportActionBar().setTitle(Html.fromHtml(articleTitle));
+
+        Glide.with(mArticleHeader.getContext()).load(articleFeaturedImageURL)
+                .into(mArticleHeader);
+        mArticleTitleTextView.setText(Html.fromHtml(articleTitle));
+        mArticleContentTextView.setText(Html.fromHtml(articleContent));
+    }
+
+    @Override
+    public void onScroll(int l, int scrollPosition) {
+        int headerHeight = mArticleHeader.getHeight() - mToolbar.getHeight();
+        float ratio = 0;
+        if (scrollPosition > 0 && headerHeight > 0) {
+            ratio = (float)Math.min(Math.max(scrollPosition, 0), headerHeight) / headerHeight;
+        }
+
+        updateActionBarTransparency(ratio);
+//        updateStatusBarColor(ratio);
+        updateParallaxEffect(scrollPosition);
+    }
+
+    private void updateActionBarTransparency(float scrollRatio) {
+        int newAlpha = (int) (scrollRatio * 255);
+        mActionBarBackgroundDrawable.setAlpha(newAlpha);
+        mToolbar.setBackgroundDrawable(mActionBarBackgroundDrawable);
+        //mToolbar.setBackground(mActionBarBackgroundDrawable); // This method call requires API 16, min is 15
+    }
+
+//    private void updateStatusBarColor(float scrollRatio) {
+//        int r = interpolate(Color.red(mInitialStatusBarColor), Color.red(mFinalStatusBarColor), 1 - scrollRatio);
+//        int g = interpolate(Color.green(mInitialStatusBarColor), Color.green(mFinalStatusBarColor), 1 - scrollRatio);
+//        int b = interpolate(Color.blue(mInitialStatusBarColor), Color.blue(mFinalStatusBarColor), 1 - scrollRatio);
+//        mStatusBarManager.setTintColor(Color.rgb(r, g, b));
+//    }
+
+    private void updateParallaxEffect(int scrollPosition) {
+        float damping = 0.5f;
+        int dampedScroll = (int) (scrollPosition * damping);
+        int offset = mLastDampedScroll - dampedScroll;
+        mArticleHeader.offsetTopAndBottom(-offset);
+
+        mLastDampedScroll = dampedScroll;
+    }
+
+    private int interpolate(int from, int to, float param) {
+        return (int) (from * param + to * (1 - param));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_article, menu);
         return true;
     }
@@ -48,9 +129,5 @@ public class ArticleActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public static class ArticleFragment extends Fragment {
-
     }
 }
