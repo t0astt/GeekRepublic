@@ -2,13 +2,18 @@ package com.mikerinehart.geekrepublic.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Post {
     @SerializedName("ID") private int id;
     @SerializedName("title") private String title;
     @SerializedName("featured_image") private FeaturedImage featuredImage;
-//    @SerializedName("date") private Date dateCreated;
+    @SerializedName("author") private Author author;
+    @SerializedName("content") private String content;
+    @SerializedName("date") private String dateCreated;
 //    @SerializedName("date_gmt") private Date dateCreatedGMT;
 //    @SerializedName("modified") private Date dateModified;
 //    @SerializedName("modified_gmt") private Date dateModifiedGMT;
@@ -17,9 +22,9 @@ public class Post {
 //    @SerializedName("status") private String status;
 //    @SerializedName("type") private String type;
 //    @SerializedName("name") private String name;
-//    @SerializedName("author") private Author author;
+
 //    @SerializedName("password") private String password;
-    @SerializedName("content") private String content;
+
 //    @SerializedName("excerpt") private String excerpt;
 //    @SerializedName("content_raw") private String contentRaw;
 //    @SerializedName("except_raw") private String excerptRaw;
@@ -36,11 +41,13 @@ public class Post {
 //    @SerializedName("post_meta") private Metadata metadata;
 //    @SerializedName("meta") private Meta meta;
 
-    public Post(int id, String title, FeaturedImage featuredImage, String content) {
+    public Post(int id, String title, FeaturedImage featuredImage, String content, Author author, String dateCreated) {
         this.id = id;
         this.title = title;
         this.featuredImage = featuredImage;
         this.content = content;
+        this.author = author;
+        this.dateCreated = dateCreated;
     }
 
 
@@ -89,9 +96,18 @@ public class Post {
         return featuredImage;
     }
 
-//    public Date getDateCreated() {
-//        return dateCreated;
-//    }
+    public Date getDateCreated() {
+        String target = dateCreated.replace("T", " ");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date;
+        try {
+            date = df.parse(target);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new Date(); // If we can't parse the date, return current time as a safety
+        }
+    }
 //
 //    public Date getDateCreatedGMT() {
 //        return dateCreatedGMT;
@@ -125,9 +141,9 @@ public class Post {
 //        return name;
 //    }
 //
-//    public Author getAuthor() {
-//        return author;
-//    }
+    public Author getAuthor() {
+        return author;
+    }
 //
 //    public String getPassword() {
 //        return password;

@@ -25,6 +25,7 @@ import com.mikerinehart.geekrepublic.adapters.PostAdapter;
 import com.mikerinehart.geekrepublic.interfaces.ApiService;
 import com.mikerinehart.geekrepublic.models.Post;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -104,6 +105,8 @@ public class HomeFragment extends Fragment {
                     intent.putExtra("articleTitle", p.getTitle());
                     intent.putExtra("articleContent", p.getContent());
                     intent.putExtra("articleFeaturedImageURL", p.getFeaturedImage().getSourceURL());
+                    intent.putExtra("articleAuthor", p.getAuthor().getName());
+                    intent.putExtra("articlePublishDate", p.getDateCreated().getTime());
                     startActivity(intent);
                 }
 

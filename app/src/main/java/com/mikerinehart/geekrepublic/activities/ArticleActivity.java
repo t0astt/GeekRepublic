@@ -21,6 +21,9 @@ import com.manuelpeinado.fadingactionbar.view.ObservableScrollable;
 import com.manuelpeinado.fadingactionbar.view.OnScrollChangedCallback;
 import com.mikerinehart.geekrepublic.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -30,6 +33,8 @@ public class ArticleActivity extends ActionBarActivity implements OnScrollChange
     String articleTitle;
     String articleContent;
     String articleFeaturedImageURL;
+    String articleAuthor;
+    Date articlePublishDate;
 
     private int mLastDampedScroll;
     private int mInitialStatusBarColor;
@@ -37,6 +42,8 @@ public class ArticleActivity extends ActionBarActivity implements OnScrollChange
     @InjectView(R.id.toolbar) Toolbar mToolbar;
     @InjectView(R.id.article_title) TextView mArticleTitleTextView;
     @InjectView(R.id.article_content) TextView mArticleContentTextView;
+    @InjectView(R.id.article_author) TextView mArticleAuthorTextView;
+    @InjectView(R.id.article_publish_date) TextView mArticlePublishDate;
     @InjectView(R.id.header) ImageView mArticleHeader;
     @InjectView(R.id.article_scrollview) ObservableScrollable mScrollView;
     Drawable mActionBarBackgroundDrawable;
@@ -59,6 +66,10 @@ public class ArticleActivity extends ActionBarActivity implements OnScrollChange
         articleTitle = mIntent.getStringExtra("articleTitle");
         articleContent = mIntent.getStringExtra("articleContent");
         articleFeaturedImageURL = mIntent.getStringExtra("articleFeaturedImageURL");
+        articleAuthor = mIntent.getStringExtra("articleAuthor");
+
+        SimpleDateFormat df = new SimpleDateFormat("MMMM F', 'yyyy");
+        articlePublishDate = new Date(mIntent.getLongExtra("articlePublishDate", 5L));
 
         getSupportActionBar().setTitle(Html.fromHtml(articleTitle));
 
@@ -66,6 +77,9 @@ public class ArticleActivity extends ActionBarActivity implements OnScrollChange
                 .into(mArticleHeader);
         mArticleTitleTextView.setText(Html.fromHtml(articleTitle));
         mArticleContentTextView.setText(Html.fromHtml(articleContent));
+        mArticleAuthorTextView.setText("By: " + Html.fromHtml(articleAuthor));
+        mArticlePublishDate.setText("Published: " + df.format(articlePublishDate));
+
     }
 
     @Override
