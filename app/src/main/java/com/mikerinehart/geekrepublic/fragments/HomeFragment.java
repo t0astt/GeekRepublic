@@ -138,7 +138,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(getActivity(), "Failed to retrieve posts", Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(), "Failed to retrieve posts", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -159,7 +159,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(getActivity(), "Failed to retrieve posts", Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(), "Failed to retrieve posts", Toast.LENGTH_SHORT).show();
             }
         });
     }

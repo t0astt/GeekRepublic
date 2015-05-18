@@ -60,8 +60,6 @@ public class ArticleActivity extends ActionBarActivity implements OnScrollChange
         articleContent = mIntent.getStringExtra("articleContent");
         articleFeaturedImageURL = mIntent.getStringExtra("articleFeaturedImageURL");
 
-        Log.i("Article View", articleFeaturedImageURL);
-
         getSupportActionBar().setTitle(Html.fromHtml(articleTitle));
 
         Glide.with(mArticleHeader.getContext()).load(articleFeaturedImageURL)
@@ -98,7 +96,7 @@ public class ArticleActivity extends ActionBarActivity implements OnScrollChange
 //    }
 
     private void updateParallaxEffect(int scrollPosition) {
-        float damping = 0.5f;
+        float damping = 0.16f; // original is 0.5f, higher number results in less parallax
         int dampedScroll = (int) (scrollPosition * damping);
         int offset = mLastDampedScroll - dampedScroll;
         mArticleHeader.offsetTopAndBottom(-offset);
