@@ -7,11 +7,7 @@
 
     <include layout="@layout/toolbar"
         android:id="@+id/toolbar"></include>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@drawable/toolbar_shadow"
-        android:layout_below="@+id/toolbar" />
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -23,8 +19,12 @@
         android:paddingLeft="11dp"
         android:paddingRight="11dp"
         android:translationZ="200dp">
-
-
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@drawable/toolbar_shadow"
+        android:layout_below="@+id/toolbar" />
 
 </RelativeLayout>
