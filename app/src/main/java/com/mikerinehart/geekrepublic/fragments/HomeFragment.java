@@ -47,8 +47,7 @@ public class HomeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        return fragment;
+        return new HomeFragment();
     }
 
     public HomeFragment() {}

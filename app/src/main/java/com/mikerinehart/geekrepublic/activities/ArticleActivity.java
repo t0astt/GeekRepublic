@@ -64,7 +64,7 @@ public class ArticleActivity extends AppCompatActivity implements OnScrollChange
         articleFeaturedImageURL = mIntent.getStringExtra("articleFeaturedImageURL");
         articleAuthor = mIntent.getStringExtra("articleAuthor");
 
-        SimpleDateFormat df = new SimpleDateFormat("MMMM F', 'yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("MMMM d', 'yyyy");
         articlePublishDate = new Date(mIntent.getLongExtra("articlePublishDate", 5L));
 
         getSupportActionBar().setTitle(Html.fromHtml(articleTitle));

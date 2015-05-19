@@ -7,10 +7,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Article Activity Theme. Uses transparent toolbar -->
     <style name="ArticleViewTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
         <item name="windowActionBar">false</item>
-        <!--<item name="android:windowTranslucentStatus">true</item>-->
         <item name="android:fitsSystemWindows">true</item>
 
         <item name="colorPrimary">@color/colorPrimary</item>
