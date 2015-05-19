@@ -60,7 +60,6 @@ public class HomeFragment extends Fragment {
         mAdapter = new PostAdapter();
     }
 
-    @DebugLog
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -81,7 +80,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onRefresh() {
                 getPosts();
-                mUltimateRecyclerView.setRefreshing(false);
+
             }
         });
 
@@ -128,12 +127,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void success(List<Post> posts, Response response) {
 
-
                 mUltimateRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
-                mPageNumber++;
+                mAdapter.clear();
+                mPageNumber = 1;
                 for (int i = 0; i < posts.size(); i++) {
                     mAdapter.add(i, posts.get(i));
                 }
+
+                mUltimateRecyclerView.setRefreshing(false);
                 Log.i("Shit", "TotalItemCount" + mLayoutManager.getItemCount());
                 Log.i("Shit", "Last visible item position" + mLayoutManager.findLastVisibleItemPosition());
             }
@@ -141,6 +142,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void failure(RetrofitError error) {
                 Toast.makeText(getActivity(), "Failed to retrieve posts", Toast.LENGTH_SHORT).show();
+                mUltimateRecyclerView.setRefreshing(false);
             }
         });
     }
