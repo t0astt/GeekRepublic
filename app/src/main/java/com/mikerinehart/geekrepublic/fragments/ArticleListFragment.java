@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,48 +15,45 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.malinskiy.superrecyclerview.OnMoreListener;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.mikerinehart.geekrepublic.R;
 import com.mikerinehart.geekrepublic.RestClient;
 import com.mikerinehart.geekrepublic.activities.ArticleActivity;
-import com.mikerinehart.geekrepublic.adapters.PostAdapter;
+import com.mikerinehart.geekrepublic.adapters.ArticleAdapter;
 import com.mikerinehart.geekrepublic.interfaces.ApiService;
 import com.mikerinehart.geekrepublic.models.Post;
 
-import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import hugo.weaving.DebugLog;
 import jp.wasabeef.recyclerview.animators.adapters.ScaleInAnimationAdapter;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class HomeFragment extends Fragment {
+public class ArticleListFragment extends Fragment {
     @InjectView(R.id.home_recyclerview) UltimateRecyclerView mUltimateRecyclerView;
     LinearLayoutManager mLayoutManager;
-    PostAdapter mAdapter;
+    ArticleAdapter mAdapter;
     RestClient mRestClient;
     ApiService mApiService;
     int mPageNumber = 1;
 
     private OnFragmentInteractionListener mListener;
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
+    public static ArticleListFragment newInstance() {
+        return new ArticleListFragment();
     }
 
-    public HomeFragment() {}
+    public ArticleListFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mRestClient = new RestClient();
         mApiService = mRestClient.getApiService();
-        mAdapter = new PostAdapter();
+        mAdapter = new ArticleAdapter();
     }
 
     @Override

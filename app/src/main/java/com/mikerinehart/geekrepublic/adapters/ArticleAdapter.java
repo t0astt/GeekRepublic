@@ -21,17 +21,17 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class PostAdapter extends UltimateViewAdapter {
+public class ArticleAdapter extends UltimateViewAdapter {
 
     private final String TAG = "NewsItemAdapter";
     private List<Post> postList;
     private Context c;
 
-    public PostAdapter() {
+    public ArticleAdapter() {
         postList = new ArrayList<>();
     }
 
-    public PostAdapter(List<Post> postList) {
+    public ArticleAdapter(List<Post> postList) {
         this.postList = postList;
     }
 

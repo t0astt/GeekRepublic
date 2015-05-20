@@ -2,7 +2,6 @@ package com.mikerinehart.geekrepublic.activities;
 
 import android.net.Uri;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,25 +12,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
-import com.mikepenz.materialdrawer.model.SwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.Iconable;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.mikerinehart.geekrepublic.R;
-import com.mikerinehart.geekrepublic.fragments.HomeFragment;
+import com.mikerinehart.geekrepublic.fragments.ArticleListFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ArticleListFragment.OnFragmentInteractionListener {
     @InjectView(R.id.toolbar) Toolbar toolbar;
 
     @Override
@@ -112,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
             @Override
             public void run() {
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.layout_container, new HomeFragment())
+                        .replace(R.id.layout_container, new ArticleListFragment())
                         .commit();
             }
         });
