@@ -67,10 +67,13 @@ public class ArticleAdapter extends UltimateViewAdapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder vh, int i) {
         Post p = postList.get(i);
-        if (vh instanceof RecyclerView.ViewHolder) {
+        // Try catch required to handle instance where "load more" view is injected and cannot be cast
+        try {
             Glide.with(c).load(p.getFeaturedImage().getSourceURL())
                     .into(((ViewHolder)vh).featuredImage);
             ((ViewHolder)vh).postTitle.setText(Html.fromHtml(p.getTitle()));
+        } catch (ClassCastException e) {
+            e.printStackTrace();
         }
     }
 

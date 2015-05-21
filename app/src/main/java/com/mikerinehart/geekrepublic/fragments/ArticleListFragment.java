@@ -88,7 +88,7 @@ public class ArticleListFragment extends Fragment {
                 getArticles();
             }
         });
-        //mAdapter.setCustomLoadMoreView(inflater.inflate(R.layout.view_more_progress, null));
+        mAdapter.setCustomLoadMoreView(inflater.inflate(R.layout.view_more_progress, null));
         ultimateRecyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

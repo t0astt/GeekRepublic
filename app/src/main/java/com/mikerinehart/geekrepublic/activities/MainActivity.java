@@ -66,14 +66,14 @@ public class MainActivity extends AppCompatActivity implements ArticleListFragme
                             switch (position) {
                                 // Home
                                 case 0:
-                                    ft.add(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_HOME));
+                                    ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_HOME));
                                     ft.addToBackStack("Home");
                                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     ft.commit();
                                     break;
                                 // News
                                 case 1:
-                                    ft.add(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_NEWS));
+                                    ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_NEWS));
                                     ft.addToBackStack("News");
                                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     ft.commit();
