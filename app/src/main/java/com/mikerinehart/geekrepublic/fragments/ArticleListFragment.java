@@ -36,6 +36,7 @@ public class ArticleListFragment extends Fragment {
     @InjectView(R.id.home_recyclerview) UltimateRecyclerView ultimateRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private ArticleAdapter mAdapter;
+    private ScaleInAnimationAdapter mAnimationAdapter;
     private RestClient mRestClient;
     private ApiService mApiService;
 
@@ -43,7 +44,7 @@ public class ArticleListFragment extends Fragment {
     private int mCategory = 0;
     private int mPageNumber = 1;
 
-    private static final String ARG_CATEGORY = "Category";
+    private static final String ARG_CATEGORY = "category";
 
     private OnFragmentInteractionListener mListener;
 
@@ -61,12 +62,13 @@ public class ArticleListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mCategory = getArguments().getInt("category"); // Grab the category so we can switch on it to determine what articles to grab
+            mCategory = getArguments().getInt("category", 0); // Grab the category so we can switch on it to determine what articles to grab
         }
 
         mRestClient = new RestClient();
         mApiService = mRestClient.getApiService();
         mAdapter = new ArticleAdapter();
+        mAnimationAdapter = new ScaleInAnimationAdapter(mAdapter);
         getArticles();
         Log.i("ArticleListFragment", "Running onCreate");
     }
@@ -78,6 +80,7 @@ public class ArticleListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.inject(this, view);
 
+        ultimateRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
         mLayoutManager = new LinearLayoutManager(ultimateRecyclerView.getContext());
         ultimateRecyclerView.setLayoutManager(mLayoutManager);
         ultimateRecyclerView.enableLoadmore();
@@ -141,12 +144,14 @@ public class ArticleListFragment extends Fragment {
         Callback<List<Post>> callback = new Callback<List<Post>>() {
             @Override
             public void success(List<Post> posts, Response response) {
-                ultimateRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
-                int currentAdapterItemCount = mAdapter.getAdapterItemCount();
-                int lastVisiblePosition = mAdapter.getAdapterItemCount()-(posts.size()-1);
+                //ultimateRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
+                if (ultimateRecyclerView.getAdapter() == null) {
+                    ultimateRecyclerView.setAdapter(mAnimationAdapter);
+                }
                 for (int i = 0; i < posts.size(); i++) {
                     mAdapter.insert(posts.get(i));
                 }
+
             }
 
             @Override

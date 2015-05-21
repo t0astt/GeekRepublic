@@ -43,16 +43,12 @@ public class ArticleAdapter extends UltimateViewAdapter {
 //    }
 
     public void insert(Post p) {
-        insert(postList, p, getAdapterItemCount());
+        //insert(postList, p, getAdapterItemCount());
+        postList.add(p);
     }
 
     public void clear() {
         postList.clear();
-    }
-
-    @Override
-    public int getItemCount() {
-        return postList.size();
     }
 
     @Override
@@ -66,14 +62,16 @@ public class ArticleAdapter extends UltimateViewAdapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder vh, int i) {
-        Post p = postList.get(i);
-        // Try catch required to handle instance where "load more" view is injected and cannot be cast
-        try {
-            Glide.with(c).load(p.getFeaturedImage().getSourceURL())
-                    .into(((ViewHolder)vh).featuredImage);
-            ((ViewHolder)vh).postTitle.setText(Html.fromHtml(p.getTitle()));
-        } catch (ClassCastException e) {
-            e.printStackTrace();
+        if (postList.size() > 0) {
+            Post p = postList.get(i);
+            // Try catch required to handle instance where "load more" view is injected and cannot be cast
+            try {
+                Glide.with(c).load(p.getFeaturedImage().getSourceURL())
+                        .into(((ViewHolder)vh).featuredImage);
+                ((ViewHolder)vh).postTitle.setText(Html.fromHtml(p.getTitle()));
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+            }
         }
     }
 
