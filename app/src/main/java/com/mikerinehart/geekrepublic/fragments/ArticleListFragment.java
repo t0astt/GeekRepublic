@@ -62,7 +62,7 @@ public class ArticleListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mCategory = getArguments().getInt("category", 0); // Grab the category so we can switch on it to determine what articles to grab
+            mCategory = getArguments().getInt(ARG_CATEGORY, 0); // Grab the category so we can switch on it to determine what articles to grab
         }
 
         mRestClient = new RestClient();

@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements ArticleListFragme
                                     break;
                                 // Security
                                 case 2:
-                                    ft.add(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_SECURITY));
+                                    ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_SECURITY));
                                     ft.addToBackStack("Security");
                                     ft.commit();
                                     break;
