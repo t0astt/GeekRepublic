@@ -33,50 +33,68 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class ArticleListFragment extends Fragment {
-    @InjectView(R.id.home_recyclerview) UltimateRecyclerView mUltimateRecyclerView;
-    LinearLayoutManager mLayoutManager;
-    ArticleAdapter mAdapter;
-    RestClient mRestClient;
-    ApiService mApiService;
-    int mPageNumber = 1;
+    @InjectView(R.id.home_recyclerview) UltimateRecyclerView ultimateRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private ArticleAdapter mAdapter;
+    private RestClient mRestClient;
+    private ApiService mApiService;
+
+
+    private int mCategory = 0;
+    private int mPageNumber = 1;
+
+    private static final String ARG_CATEGORY = "Category";
 
     private OnFragmentInteractionListener mListener;
 
-    public static ArticleListFragment newInstance() {
-        return new ArticleListFragment();
-    }
-
     public ArticleListFragment() {}
+
+    public static ArticleListFragment newInstance(int category) {
+        ArticleListFragment f = new ArticleListFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_CATEGORY, category);
+        f.setArguments(args);
+        return f;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mCategory = getArguments().getInt("category"); // Grab the category so we can switch on it to determine what articles to grab
+        }
+
         mRestClient = new RestClient();
         mApiService = mRestClient.getApiService();
         mAdapter = new ArticleAdapter();
+        getArticles();
+        Log.i("ArticleListFragment", "Running onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i("ArticleListFragment", "Running onCreateView");
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.inject(this, view);
 
-        mLayoutManager = new LinearLayoutManager(mUltimateRecyclerView.getContext());
-        mUltimateRecyclerView.setLayoutManager(mLayoutManager);
-        mUltimateRecyclerView.enableLoadmore();
-        mUltimateRecyclerView.setOnLoadMoreListener(new UltimateRecyclerView.OnLoadMoreListener() {
+        mLayoutManager = new LinearLayoutManager(ultimateRecyclerView.getContext());
+        ultimateRecyclerView.setLayoutManager(mLayoutManager);
+        ultimateRecyclerView.enableLoadmore();
+        ultimateRecyclerView.setOnLoadMoreListener(new UltimateRecyclerView.OnLoadMoreListener() {
             @Override
             public void loadMore(int itemsCount, int maxLastVisiblePosition) {
-                getMorePosts();
+                mPageNumber++;
+                getArticles();
             }
         });
-        mAdapter.setCustomLoadMoreView(LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.view_more_progress, null));
-        mUltimateRecyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        //mAdapter.setCustomLoadMoreView(inflater.inflate(R.layout.view_more_progress, null));
+        ultimateRecyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getPosts();
-
+                mPageNumber = 1;
+                mAdapter.clear();
+                getArticles();
             }
         });
 
@@ -86,10 +104,10 @@ public class ArticleListFragment extends Fragment {
                 return true;
             }
         });
-        mUltimateRecyclerView.mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+        ultimateRecyclerView.mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                ViewGroup child = (ViewGroup)rv.findChildViewUnder(e.getX(), e.getY());
+                ViewGroup child = (ViewGroup) rv.findChildViewUnder(e.getX(), e.getY());
 
                 if (child != null && mGestureDetector.onTouchEvent(e)) {
                     int itemClicked = rv.getChildPosition(child);
@@ -113,56 +131,102 @@ public class ArticleListFragment extends Fragment {
             }
         });
 
-        getPosts();
-
         return view;
     }
 
-    private void getPosts() {
-        mApiService.getNews(new Callback<List<Post>>() {
+    /**
+     * Fetches articles based on mCategory variable.
+     */
+    private void getArticles() {
+        Callback<List<Post>> callback = new Callback<List<Post>>() {
             @Override
             public void success(List<Post> posts, Response response) {
-
-                mUltimateRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
-                mAdapter.clear();
-                mPageNumber = 1;
+                ultimateRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
+                int currentAdapterItemCount = mAdapter.getAdapterItemCount();
+                int lastVisiblePosition = mAdapter.getAdapterItemCount()-(posts.size()-1);
                 for (int i = 0; i < posts.size(); i++) {
-                    mAdapter.add(i, posts.get(i));
+                    mAdapter.insert(posts.get(i));
                 }
-
-                mUltimateRecyclerView.setRefreshing(false);
-                Log.i("Shit", "TotalItemCount" + mLayoutManager.getItemCount());
-                Log.i("Shit", "Last visible item position" + mLayoutManager.findLastVisibleItemPosition());
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(getActivity(), "Failed to retrieve posts", Toast.LENGTH_SHORT).show();
-                mUltimateRecyclerView.setRefreshing(false);
+                Toast.makeText(getActivity(), "Failed to fetch articles. Please try again!", Toast.LENGTH_SHORT).show();
+                ultimateRecyclerView.setRefreshing(false);
             }
-        });
+        };
+
+        switch (mCategory) {
+            case 0:
+                mApiService.getAllArticles(mPageNumber, callback);
+                break;
+            case 1:
+                mApiService.getNewsArticles(mPageNumber, callback);
+                break;
+            case 2:
+                mApiService.getSecurityArticles(mPageNumber, callback);
+                break;
+            case 3:
+                mApiService.getGamingArticles(mPageNumber, callback);
+                break;
+            case 4:
+                mApiService.getMobileArticles(mPageNumber, callback);
+                break;
+            case 5:
+                mApiService.getTechnologyArticles(mPageNumber, callback);
+                break;
+            case 6:
+                mApiService.getCultureArticles(mPageNumber, callback);
+                break;
+            case 7:
+                mApiService.getGadgetsArticles(mPageNumber, callback);
+                break;
+        }
+
+//        mApiService.getNews(new Callback<List<Post>>() {
+//            @Override
+//            public void success(List<Post> posts, Response response) {
+//
+//                ultimateRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
+//                mAdapter.clear();
+//                mPageNumber = 1;
+//                for (int i = 0; i < posts.size(); i++) {
+//                    mAdapter.add(i, posts.get(i));
+//                }
+//
+//                ultimateRecyclerView.setRefreshing(false);
+//                Log.i("Shit", "TotalItemCount" + mLayoutManager.getItemCount());
+//                Log.i("Shit", "Last visible item position" + mLayoutManager.findLastVisibleItemPosition());
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                Toast.makeText(getActivity(), "Failed to retrieve posts", Toast.LENGTH_SHORT).show();
+//                ultimateRecyclerView.setRefreshing(false);
+//            }
+//        });
     }
 
-    private void getMorePosts() {
-        mApiService.getMoreNews(mPageNumber, new Callback<List<Post>>() {
-            @Override
-            public void success(List<Post> posts, Response response) {
-                mPageNumber++;
-                int positionOffset = mAdapter.getItemCount();
-                for (int i = 0; i < posts.size(); i++) {
-                    mAdapter.add(positionOffset + i, posts.get(i));
-                }
-                Log.i("Shit", "TotalItemCount" + mLayoutManager.getItemCount());
-                Log.i("Shit", "Last visible item position" + mLayoutManager.findLastVisibleItemPosition());
-                mAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Toast.makeText(getActivity(), "Failed to retrieve posts", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+//    private void getMorePosts() {
+//        mApiService.getMoreNews(mPageNumber, new Callback<List<Post>>() {
+//            @Override
+//            public void success(List<Post> posts, Response response) {
+//                mPageNumber++;
+//                int positionOffset = mAdapter.getItemCount();
+//                for (int i = 0; i < posts.size(); i++) {
+//                    mAdapter.add(positionOffset + i, posts.get(i));
+//                }
+//                Log.i("Shit", "TotalItemCount" + mLayoutManager.getItemCount());
+//                Log.i("Shit", "Last visible item position" + mLayoutManager.findLastVisibleItemPosition());
+//                mAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                Toast.makeText(getActivity(), "Failed to retrieve posts", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
     @Override
     public void onAttach(Activity activity) {

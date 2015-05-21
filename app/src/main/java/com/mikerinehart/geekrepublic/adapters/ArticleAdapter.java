@@ -35,10 +35,15 @@ public class ArticleAdapter extends UltimateViewAdapter {
         this.postList = postList;
     }
 
-    public void add(int position, Post p) {
-        postList.add(position, p);
-        notifyItemInserted(position);
-        notifyItemRangeChanged(position-1, position);
+//    public void add(int position, Post p) {
+//        postList.add(position, p);
+//        notifyItemInserted(position);
+//        insert(postList, p, );
+//        //notifyItemRangeChanged(position-1, position);
+//    }
+
+    public void insert(Post p) {
+        insert(postList, p, getAdapterItemCount());
     }
 
     public void clear() {
@@ -62,10 +67,11 @@ public class ArticleAdapter extends UltimateViewAdapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder vh, int i) {
         Post p = postList.get(i);
-        Glide.with(c).load(p.getFeaturedImage().getSourceURL())
-                .into(((ViewHolder)vh).featuredImage);
-        ((ViewHolder)vh).postTitle.setText(Html.fromHtml(p.getTitle()));
-
+        if (vh instanceof RecyclerView.ViewHolder) {
+            Glide.with(c).load(p.getFeaturedImage().getSourceURL())
+                    .into(((ViewHolder)vh).featuredImage);
+            ((ViewHolder)vh).postTitle.setText(Html.fromHtml(p.getTitle()));
+        }
     }
 
     @Override

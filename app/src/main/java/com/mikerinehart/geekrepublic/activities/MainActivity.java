@@ -1,11 +1,12 @@
 package com.mikerinehart.geekrepublic.activities;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
+import com.mikerinehart.geekrepublic.Constants;
 import com.mikerinehart.geekrepublic.R;
 import com.mikerinehart.geekrepublic.fragments.ArticleListFragment;
 
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements ArticleListFragme
         ButterKnife.inject(this);
         setSupportActionBar(toolbar);
 
-        Drawer.Result result = new Drawer()
+        new Drawer()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .addDrawerItems(
@@ -58,32 +60,59 @@ public class MainActivity extends AppCompatActivity implements ArticleListFragme
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
                         if (drawerItem instanceof Nameable) {
-                            Toast.makeText(getApplicationContext(), MainActivity.this.getString(((Nameable)drawerItem).getNameRes()), Toast.LENGTH_SHORT).show();
-                            Log.i("Drawer", position + "");
+                            Toast.makeText(getApplicationContext(), MainActivity.this.getString(((Nameable)drawerItem).getNameRes()), Toast.LENGTH_SHORT).show(); // TODO: For debugging purposes
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            Bundle bundle = new Bundle();
                             switch (position) {
                                 // Home
                                 case 0:
+                                    ft.add(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_HOME));
+                                    ft.addToBackStack("Home");
+                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                                    ft.commit();
                                     break;
                                 // News
                                 case 1:
+                                    ft.add(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_NEWS));
+                                    ft.addToBackStack("News");
+                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                                    ft.commit();
                                     break;
                                 // Security
                                 case 2:
+                                    ft.add(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_SECURITY));
+                                    ft.addToBackStack("Security");
+                                    ft.commit();
                                     break;
                                 // Gaming
                                 case 3:
+                                    ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_GAMING));
+                                    ft.addToBackStack("Gaming");
+                                    ft.commit();
                                     break;
                                 // Mobile
                                 case 4:
+                                    ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_MOBILE));
+                                    ft.addToBackStack("Mobile");
+                                    ft.commit();
                                     break;
                                 // Technology
                                 case 5:
+                                    ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_TECHNOLOGY));
+                                    ft.addToBackStack("Technology");
+                                    ft.commit();
                                     break;
                                 // Culture
                                 case 6:
+                                    ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_CULTURE));
+                                    ft.addToBackStack("Culture");
+                                    ft.commit();
                                     break;
                                 // Gadgets
                                 case 7:
+                                    ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_GADGETS));
+                                    ft.addToBackStack("Gadgets");
+                                    ft.commit();
                                     break;
                                 // Facebook
                                 case 9:
@@ -111,6 +140,16 @@ public class MainActivity extends AppCompatActivity implements ArticleListFragme
                         .commit();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStackImmediate();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
