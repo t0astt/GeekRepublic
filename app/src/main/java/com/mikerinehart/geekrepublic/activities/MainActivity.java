@@ -2,6 +2,7 @@ package com.mikerinehart.geekrepublic.activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
@@ -117,15 +118,23 @@ public class MainActivity extends AppCompatActivity implements ArticleListFragme
                                     break;
                                 // Facebook
                                 case 9:
+                                    try {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW,
+                                                Uri.parse(Constants.FACEBOOK_APP_URI));
+                                                startActivity(intent);
+                                    } catch (ActivityNotFoundException e) {
+                                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                                Uri.parse(Constants.FACEBOOK_BROWSER_URI)));
+                                    }
                                     break;
                                 // Twitter
                                 case 10:
                                     try {
                                         Intent intent = new Intent(Intent.ACTION_VIEW,
                                                 Uri.parse(Constants.TWITTER_APP_URI));
-                                        startActivity(intent);
+                                                startActivity(intent);
 
-                                    } catch (Exception e) {
+                                    } catch (ActivityNotFoundException e) {
                                         startActivity(new Intent(Intent.ACTION_VIEW,
                                                 Uri.parse(Constants.TWITTER_BROWSER_URI)));
                                     }

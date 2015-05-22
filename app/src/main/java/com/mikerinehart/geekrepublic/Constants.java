@@ -19,4 +19,7 @@ public class Constants {
     public static final String TWITTER_BROWSER_URI = "https://twitter.com/GeekRep";
     public static final String TWITTER_APP_URI = "twitter://user?screen_name=GeekRep";
 
+    public static final String FACEBOOK_BROWSER_URI = "https://www.facebook.com/GeekRepublic";
+    public static final String FACEBOOK_APP_URI = "fb://page/369422533088409";
+
 }
