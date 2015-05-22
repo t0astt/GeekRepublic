@@ -16,4 +16,7 @@ public class Constants {
     public static final int CATEGORY_CULTURE = 6;
     public static final int CATEGORY_GADGETS = 7;
 
+    public static final String TWITTER_BROWSER_URI = "https://twitter.com/GeekRep";
+    public static final String TWITTER_APP_URI = "twitter://user?screen_name=GeekRep";
+
 }

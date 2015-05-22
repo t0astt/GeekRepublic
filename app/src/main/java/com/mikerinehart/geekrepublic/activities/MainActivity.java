@@ -2,6 +2,7 @@ package com.mikerinehart.geekrepublic.activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Bundle;
@@ -29,7 +30,7 @@ import butterknife.InjectView;
 
 
 public class MainActivity extends AppCompatActivity implements ArticleListFragment.OnFragmentInteractionListener {
-    @InjectView(R.id.toolbar) Toolbar toolbar;
+    @InjectView(R.id.toolbar) public Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +120,15 @@ public class MainActivity extends AppCompatActivity implements ArticleListFragme
                                     break;
                                 // Twitter
                                 case 10:
+                                    try {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW,
+                                                Uri.parse(Constants.TWITTER_APP_URI));
+                                        startActivity(intent);
+
+                                    } catch (Exception e) {
+                                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                                Uri.parse(Constants.TWITTER_BROWSER_URI)));
+                                    }
                                     break;
                                 // Google+
                                 case 11:
@@ -136,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements ArticleListFragme
             @Override
             public void run() {
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.layout_container, new ArticleListFragment())
+                        .replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_HOME))
                         .commit();
             }
         });

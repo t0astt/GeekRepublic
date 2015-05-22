@@ -4,21 +4,28 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.Toast;
 
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
+import com.mikerinehart.geekrepublic.Constants;
 import com.mikerinehart.geekrepublic.R;
 import com.mikerinehart.geekrepublic.RestClient;
 import com.mikerinehart.geekrepublic.activities.ArticleActivity;
+import com.mikerinehart.geekrepublic.activities.MainActivity;
 import com.mikerinehart.geekrepublic.adapters.ArticleAdapter;
 import com.mikerinehart.geekrepublic.interfaces.ApiService;
 import com.mikerinehart.geekrepublic.models.Post;
@@ -78,9 +85,10 @@ public class ArticleListFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.i("ArticleListFragment", "Running onCreateView");
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        setActionbarTitle();
         ButterKnife.inject(this, view);
 
-        ultimateRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
+        ultimateRecyclerView.setAdapter(mAnimationAdapter);
         mLayoutManager = new LinearLayoutManager(ultimateRecyclerView.getContext());
         ultimateRecyclerView.setLayoutManager(mLayoutManager);
         ultimateRecyclerView.enableLoadmore();
@@ -144,14 +152,12 @@ public class ArticleListFragment extends Fragment {
         Callback<List<Post>> callback = new Callback<List<Post>>() {
             @Override
             public void success(List<Post> posts, Response response) {
-                //ultimateRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
-                if (ultimateRecyclerView.getAdapter() == null) {
+                if (mAdapter.getAdapterItemCount() == 0) {
                     ultimateRecyclerView.setAdapter(mAnimationAdapter);
                 }
                 for (int i = 0; i < posts.size(); i++) {
                     mAdapter.insert(posts.get(i));
                 }
-
             }
 
             @Override
@@ -212,26 +218,46 @@ public class ArticleListFragment extends Fragment {
 //        });
     }
 
-//    private void getMorePosts() {
-//        mApiService.getMoreNews(mPageNumber, new Callback<List<Post>>() {
-//            @Override
-//            public void success(List<Post> posts, Response response) {
-//                mPageNumber++;
-//                int positionOffset = mAdapter.getItemCount();
-//                for (int i = 0; i < posts.size(); i++) {
-//                    mAdapter.add(positionOffset + i, posts.get(i));
-//                }
-//                Log.i("Shit", "TotalItemCount" + mLayoutManager.getItemCount());
-//                Log.i("Shit", "Last visible item position" + mLayoutManager.findLastVisibleItemPosition());
-//                mAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                Toast.makeText(getActivity(), "Failed to retrieve posts", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+    /*
+     * Sets actionbar title of the fragment
+     * Switches on mCategory int
+     */
+    private void setActionbarTitle() {
+        switch (mCategory) {
+            // Home
+            case 0:
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Home");
+                break;
+            // News
+            case 1:
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("News");
+                break;
+            // Security
+            case 2:
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Security");
+                break;
+            // Gaming
+            case 3:
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Gaming");
+                break;
+            // Mobile
+            case 4:
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Mobile");
+                break;
+            // Technology
+            case 5:
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Technology");
+                break;
+            // Culture
+            case 6:
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Culture");
+                break;
+            // Gadgets
+            case 7:
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Gadgets");
+                break;
+        }
+    }
 
     @Override
     public void onAttach(Activity activity) {
