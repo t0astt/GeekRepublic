@@ -1,7 +1,9 @@
 package com.mikerinehart.geekrepublic.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.mikerinehart.geekrepublic.Constants;
 import com.mikerinehart.geekrepublic.R;
@@ -30,7 +33,9 @@ import com.mikerinehart.geekrepublic.adapters.ArticleAdapter;
 import com.mikerinehart.geekrepublic.interfaces.ApiService;
 import com.mikerinehart.geekrepublic.models.Post;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -47,6 +52,8 @@ public class ArticleListFragment extends Fragment {
     private RestClient mRestClient;
     private ApiService mApiService;
 
+    Gson gson;
+    SharedPreferences favoriteArticleSharedPreferences;
 
     private int mCategory = 0;
     private int mPageNumber = 1;
@@ -72,11 +79,13 @@ public class ArticleListFragment extends Fragment {
             mCategory = getArguments().getInt(ARG_CATEGORY, 0); // Grab the category so we can switch on it to determine what articles to grab
         }
 
+        gson = new Gson();
+        favoriteArticleSharedPreferences = getActivity().getSharedPreferences(Constants.SHARED_PREFERENCES_FAVORITE_ARTICLE, Context.MODE_PRIVATE);
         mRestClient = new RestClient();
         mApiService = mRestClient.getApiService();
         mAdapter = new ArticleAdapter();
         mAnimationAdapter = new ScaleInAnimationAdapter(mAdapter);
-        getArticles();
+
         Log.i("ArticleListFragment", "Running onCreate");
     }
 
@@ -91,23 +100,26 @@ public class ArticleListFragment extends Fragment {
         ultimateRecyclerView.setAdapter(mAnimationAdapter);
         mLayoutManager = new LinearLayoutManager(ultimateRecyclerView.getContext());
         ultimateRecyclerView.setLayoutManager(mLayoutManager);
-        ultimateRecyclerView.enableLoadmore();
-        ultimateRecyclerView.setOnLoadMoreListener(new UltimateRecyclerView.OnLoadMoreListener() {
-            @Override
-            public void loadMore(int itemsCount, int maxLastVisiblePosition) {
-                mPageNumber++;
-                getArticles();
-            }
-        });
-        mAdapter.setCustomLoadMoreView(inflater.inflate(R.layout.view_more_progress, null));
-        ultimateRecyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPageNumber = 1;
-                mAdapter.clear();
-                getArticles();
-            }
-        });
+        if (mCategory != 8) {
+            ultimateRecyclerView.enableLoadmore();
+            ultimateRecyclerView.setOnLoadMoreListener(new UltimateRecyclerView.OnLoadMoreListener() {
+                @Override
+                public void loadMore(int itemsCount, int maxLastVisiblePosition) {
+                    mPageNumber++;
+                    getArticles();
+                }
+            });
+            mAdapter.setCustomLoadMoreView(inflater.inflate(R.layout.view_more_progress, null));
+            ultimateRecyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    mPageNumber = 1;
+                    mAdapter.clear();
+                    getArticles();
+                }
+            });
+        }
+
 
         final GestureDetector mGestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
             @Override
@@ -124,13 +136,12 @@ public class ArticleListFragment extends Fragment {
                     int itemClicked = rv.getChildPosition(child);
 
                     Post p = mAdapter.getPost(itemClicked);
+                    String postJson = gson.toJson(p);
                     Intent intent = new Intent(getActivity(), ArticleActivity.class);
-                    intent.putExtra("articleTitle", p.getTitle());
-                    intent.putExtra("articleContent", p.getContent());
-                    intent.putExtra("articleFeaturedImageURL", p.getFeaturedImage().getSourceURL());
-                    intent.putExtra("articleAuthor", p.getAuthor().getName());
-                    intent.putExtra("articlePublishDate", p.getDateCreated().getTime());
-                    startActivity(intent);
+                    intent.putExtra("post", postJson);
+                    Bundle b = new Bundle();
+                    b.putString("post", postJson);
+                    startActivity(intent, b); // TODO: Find more compatible method
                 }
 
                 return false;
@@ -141,7 +152,7 @@ public class ArticleListFragment extends Fragment {
 
             }
         });
-
+        getArticles();
         return view;
     }
 
@@ -152,12 +163,7 @@ public class ArticleListFragment extends Fragment {
         Callback<List<Post>> callback = new Callback<List<Post>>() {
             @Override
             public void success(List<Post> posts, Response response) {
-                if (mAdapter.getAdapterItemCount() == 0) {
-                    ultimateRecyclerView.setAdapter(mAnimationAdapter);
-                }
-                for (int i = 0; i < posts.size(); i++) {
-                    mAdapter.insert(posts.get(i));
-                }
+                displayArticles(posts);
             }
 
             @Override
@@ -192,30 +198,29 @@ public class ArticleListFragment extends Fragment {
             case 7:
                 mApiService.getGadgetsArticles(mPageNumber, callback);
                 break;
+            case 8:
+                Map<String, ?> map = favoriteArticleSharedPreferences.getAll();
+                ArrayList<Post> articleList = new ArrayList<>();
+                for (Map.Entry<String, ?> entry : map.entrySet()) {
+                    String test = entry.getValue().toString();
+                    Post p = gson.fromJson(test, Post.class);
+                    articleList.add(p);
+                }
+                displayArticles(articleList);
+                break;
         }
+    }
 
-//        mApiService.getNews(new Callback<List<Post>>() {
-//            @Override
-//            public void success(List<Post> posts, Response response) {
-//
-//                ultimateRecyclerView.setAdapter(new ScaleInAnimationAdapter(mAdapter));
-//                mAdapter.clear();
-//                mPageNumber = 1;
-//                for (int i = 0; i < posts.size(); i++) {
-//                    mAdapter.add(i, posts.get(i));
-//                }
-//
-//                ultimateRecyclerView.setRefreshing(false);
-//                Log.i("Shit", "TotalItemCount" + mLayoutManager.getItemCount());
-//                Log.i("Shit", "Last visible item position" + mLayoutManager.findLastVisibleItemPosition());
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                Toast.makeText(getActivity(), "Failed to retrieve posts", Toast.LENGTH_SHORT).show();
-//                ultimateRecyclerView.setRefreshing(false);
-//            }
-//        });
+    /*
+     * Takes a list of articles and iterates through them, inserting them into the adapter
+     */
+    private void displayArticles(List<Post> articles) {
+        if (mAdapter.getAdapterItemCount() == 0) {
+            ultimateRecyclerView.setAdapter(mAnimationAdapter);
+        }
+        for (int i = 0; i < articles.size(); i++) {
+            mAdapter.insert(articles.get(i));
+        }
     }
 
     /*
@@ -256,6 +261,21 @@ public class ArticleListFragment extends Fragment {
             case 7:
                 ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Gadgets");
                 break;
+            // Favorites
+            case 8:
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Favorites");
+                break;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // If resuming the fragment from a favorited article view, we should check to see if it's still a favorited article
+        // Clear the adapter and grab new ones, otherwise we might display duplicates
+        if (mCategory == 8) {
+            mAdapter.clear();
+            getArticles();
         }
     }
 

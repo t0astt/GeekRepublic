@@ -9,11 +9,14 @@
     <string name="navigation_drawer_technology">Technology</string>
     <string name="navigation_drawer_culture">Culture</string>
     <string name="navigation_drawer_gadgets">Gadgets</string>
+    <string name="navigation_drawer_favorites">Favorites</string>
     <string name="navigation_drawer_more">More</string>
     <string name="navigation_drawer_facebook">Facebook</string>
     <string name="navigation_drawer_twitter">Twitter</string>
-    <string name="navigation_drawer_googleplus">Google+</string>
     <string name="navigation_drawer_contactus">Contact Us</string>
+
+    <string name="actionbar_favorite">Favorite</string>
+    <string name="actionbar_share">Share</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

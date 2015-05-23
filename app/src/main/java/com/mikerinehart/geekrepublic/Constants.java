@@ -15,11 +15,13 @@ public class Constants {
     public static final int CATEGORY_TECHNOLOGY = 5;
     public static final int CATEGORY_CULTURE = 6;
     public static final int CATEGORY_GADGETS = 7;
+    public static final int CATEGORY_FAVORITES = 8;
 
-    public static final String TWITTER_BROWSER_URI = "https://twitter.com/GeekRep";
-    public static final String TWITTER_APP_URI = "twitter://user?screen_name=GeekRep";
+    public static final String SHARED_PREFERENCES_FAVORITE_ARTICLE = "com.mikerinehart.GeekRepublic.favoritearticle";
 
-    public static final String FACEBOOK_BROWSER_URI = "https://www.facebook.com/GeekRepublic";
-    public static final String FACEBOOK_APP_URI = "fb://page/369422533088409";
+    public static final String SOCIAL_TWITTER_BROWSER_URI = "https://twitter.com/GeekRep";
+    public static final String SOCIAL_TWITTER_APP_URI = "twitter://user?screen_name=GeekRep";
+    public static final String SOCIAL_FACEBOOK_BROWSER_URI = "https://www.facebook.com/GeekRepublic";
+    public static final String SOCIAL_FACEBOOK_APP_URI = "fb://page/369422533088409";
 
 }

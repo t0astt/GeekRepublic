@@ -29,7 +29,7 @@ public class Post {
 //    @SerializedName("content_raw") private String contentRaw;
 //    @SerializedName("except_raw") private String excerptRaw;
 //    @SerializedName("parent") private int parentID;
-//    @SerializedName("link") private String url;
+    @SerializedName("link") private String url;
 //    @SerializedName("guid") private String guid;
 //    @SerializedName("menu_order") private int order; // Sort posts. Larger values should be sorted before smaller values
 //    @SerializedName("comment_status") private String commentStatus = "closed"; // Either 'open' or 'closed'. Missing value defaults to closed
@@ -41,13 +41,14 @@ public class Post {
 //    @SerializedName("post_meta") private Metadata metadata;
 //    @SerializedName("meta") private Meta meta;
 
-    public Post(int id, String title, FeaturedImage featuredImage, String content, Author author, String dateCreated) {
+    public Post(int id, String title, FeaturedImage featuredImage, String content, Author author, String dateCreated, String url) {
         this.id = id;
         this.title = title;
         this.featuredImage = featuredImage;
         this.content = content;
         this.author = author;
         this.dateCreated = dateCreated;
+        this.url = url;
     }
 
 
@@ -169,9 +170,9 @@ public class Post {
 //        return parentID;
 //    }
 //
-//    public String getUrl() {
-//        return url;
-//    }
+    public String getUrl() {
+        return url;
+    }
 //
 //    public String getGuid() {
 //        return guid;
