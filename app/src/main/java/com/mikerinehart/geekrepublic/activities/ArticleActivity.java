@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.manuelpeinado.fadingactionbar.view.ObservableScrollable;
 import com.manuelpeinado.fadingactionbar.view.OnScrollChangedCallback;
 import com.mikerinehart.geekrepublic.Constants;
@@ -45,6 +47,7 @@ public class ArticleActivity extends AppCompatActivity implements
     private ShareActionProvider mShareActionProvider = null;
     private Intent mShareIntent;
 
+    private AdRequest mAdRequest;
 
     @InjectView(R.id.toolbar) Toolbar mToolbar;
     @InjectView(R.id.article_title) TextView mArticleTitleTextView;
@@ -53,6 +56,8 @@ public class ArticleActivity extends AppCompatActivity implements
     @InjectView(R.id.article_publish_date) TextView mArticlePublishDate;
     @InjectView(R.id.header) ImageView mArticleHeader;
     @InjectView(R.id.article_scrollview) ObservableScrollable mScrollView;
+    @InjectView(R.id.article_adview) AdView mAdview;
+
     Drawable mActionBarBackgroundDrawable;
 
     @Override
@@ -60,6 +65,9 @@ public class ArticleActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
         ButterKnife.inject(this);
+
+        mAdRequest = new AdRequest.Builder().build();
+        mAdview.loadAd(mAdRequest);
 
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);

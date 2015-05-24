@@ -6,13 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -23,12 +20,13 @@ import android.widget.Adapter;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.mikerinehart.geekrepublic.Constants;
 import com.mikerinehart.geekrepublic.R;
 import com.mikerinehart.geekrepublic.RestClient;
 import com.mikerinehart.geekrepublic.activities.ArticleActivity;
-import com.mikerinehart.geekrepublic.activities.MainActivity;
 import com.mikerinehart.geekrepublic.adapters.ArticleAdapter;
 import com.mikerinehart.geekrepublic.interfaces.ApiService;
 import com.mikerinehart.geekrepublic.models.Post;
@@ -46,11 +44,14 @@ import retrofit.client.Response;
 
 public class ArticleListFragment extends Fragment {
     @InjectView(R.id.home_recyclerview) UltimateRecyclerView ultimateRecyclerView;
+    @InjectView(R.id.article_list_adview) AdView mAdview;
+
     private LinearLayoutManager mLayoutManager;
     private ArticleAdapter mAdapter;
     private ScaleInAnimationAdapter mAnimationAdapter;
     private RestClient mRestClient;
     private ApiService mApiService;
+    private AdRequest mAdRequest;
 
     Gson gson;
     SharedPreferences favoriteArticleSharedPreferences;
@@ -85,6 +86,7 @@ public class ArticleListFragment extends Fragment {
         mApiService = mRestClient.getApiService();
         mAdapter = new ArticleAdapter();
         mAnimationAdapter = new ScaleInAnimationAdapter(mAdapter);
+        mAdRequest = new AdRequest.Builder().build();
 
         Log.i("ArticleListFragment", "Running onCreate");
     }
@@ -96,6 +98,7 @@ public class ArticleListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         setActionbarTitle();
         ButterKnife.inject(this, view);
+        mAdview.loadAd(mAdRequest);
 
         ultimateRecyclerView.setAdapter(mAnimationAdapter);
         mLayoutManager = new LinearLayoutManager(ultimateRecyclerView.getContext());
