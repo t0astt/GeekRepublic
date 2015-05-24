@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -13,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.support.v7.widget.ShareActionProvider;
+import android.support.v4.view.MenuItemCompat;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +30,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class ArticleActivity extends AppCompatActivity implements
-        OnScrollChangedCallback,
-        ShareActionProvider.OnShareTargetSelectedListener {
+        OnScrollChangedCallback, ShareActionProvider.OnShareTargetSelectedListener {
 
     Intent mIntent;
-    private Intent mShareIntent = new Intent(Intent.ACTION_SEND);
     Post article;
     Gson gson;
 
@@ -44,7 +42,9 @@ public class ArticleActivity extends AppCompatActivity implements
     SharedPreferences favoriteArticleSharedPreferences;
     SharedPreferences.Editor favoriteArticleSharedPreferencesEditor;
 
-    private ShareActionProvider mShareActionProvider;
+    private ShareActionProvider mShareActionProvider = null;
+    private Intent mShareIntent;
+
 
     @InjectView(R.id.toolbar) Toolbar mToolbar;
     @InjectView(R.id.article_title) TextView mArticleTitleTextView;
@@ -61,10 +61,13 @@ public class ArticleActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_article);
         ButterKnife.inject(this);
 
+        mShareIntent = new Intent();
+        mShareIntent.setAction(Intent.ACTION_SEND);
+        mShareIntent.setType("text/plain");
+
         favoriteArticleSharedPreferences = this.getSharedPreferences(Constants.SHARED_PREFERENCES_FAVORITE_ARTICLE, Context.MODE_PRIVATE);
         favoriteArticleSharedPreferencesEditor = favoriteArticleSharedPreferences.edit();
         gson = new Gson();
-
 
         mActionBarBackgroundDrawable = mToolbar.getBackground();
         setSupportActionBar(mToolbar);
@@ -76,6 +79,8 @@ public class ArticleActivity extends AppCompatActivity implements
 
         mIntent = getIntent();
         article = gson.fromJson(mIntent.getStringExtra("post"), Post.class); // Un-serialize JSON into Post object
+        mShareIntent.putExtra(Intent.EXTRA_TEXT, article.getTitle() + "\n" + article.getUrl());
+
 
         SimpleDateFormat df = new SimpleDateFormat("MMMM d', 'yyyy");
 
@@ -128,21 +133,27 @@ public class ArticleActivity extends AppCompatActivity implements
     }
 
     @Override
+    public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
+        return(false);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_article, menu);
         MenuItem favoriteArticleMenuItem = menu.findItem(R.id.menu_item_favorite);
+        MenuItem shareArticleMenuItem = menu.findItem(R.id.menu_item_share);
+        shareArticleMenuItem.setEnabled(true);
+
+        mShareActionProvider = (ShareActionProvider)MenuItemCompat.getActionProvider(shareArticleMenuItem);
+        mShareActionProvider.setOnShareTargetSelectedListener(this);
+        mShareActionProvider.setShareIntent(mShareIntent);
+
         // If article is found in SP, then it is favorited so set it checked
         if (favoriteArticleSharedPreferences.contains(Integer.toString(article.getId()))) {
             favoriteArticleMenuItem.setChecked(true);
             favoriteArticleMenuItem.setIcon(getResources().getDrawable(R.drawable.ic_star_white));
         }
-        MenuItem shareArticleMenuItem = menu.findItem(R.id.menu_item_share);
-        shareArticleMenuItem.setEnabled(true);
-        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareArticleMenuItem);
-        mShareActionProvider = new ShareActionProvider(this);
-        MenuItemCompat.setActionProvider(shareArticleMenuItem, mShareActionProvider);
-//        mShareActionProvider.setOnShareTargetSelectedListener(this);
-        return true;
+        return(super.onCreateOptionsMenu(menu));
     }
 
     @Override
@@ -167,12 +178,6 @@ public class ArticleActivity extends AppCompatActivity implements
                     Toast.makeText(getApplicationContext(), "Article Unfavorited!", Toast.LENGTH_SHORT).show();
                 }
                 return true;
-            case R.id.menu_item_share:
-                mShareIntent.setType("text/plain");
-                mShareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, article.getTitle());
-                mShareIntent.putExtra(android.content.Intent.EXTRA_TEXT, article.getUrl());
-                startActivity(Intent.createChooser(mShareIntent, "Share via"));
-                return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -181,15 +186,4 @@ public class ArticleActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
-        setShareIntent(intent);
-        return false;
-    }
-
-    private void setShareIntent(Intent shareIntent) {
-        if (mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(shareIntent);
-        }
-    }
 }
