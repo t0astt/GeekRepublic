@@ -87,7 +87,7 @@ public class ArticleActivity extends AppCompatActivity implements
 
         mIntent = getIntent();
         article = gson.fromJson(mIntent.getStringExtra("post"), Post.class); // Un-serialize JSON into Post object
-        mShareIntent.putExtra(Intent.EXTRA_TEXT, article.getTitle() + "\n" + article.getUrl());
+        mShareIntent.putExtra(Intent.EXTRA_TEXT, article.getUrl());
 
 
         SimpleDateFormat df = new SimpleDateFormat("MMMM d', 'yyyy");
