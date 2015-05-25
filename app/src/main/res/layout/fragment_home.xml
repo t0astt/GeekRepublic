@@ -11,18 +11,41 @@
     <com.marshalchen.ultimaterecyclerview.UltimateRecyclerView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/home_recyclerview">
+        android:id="@+id/home_recyclerview"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentBottom="false"
+        android:layout_above="@+id/article_list_adview_container">
     </com.marshalchen.ultimaterecyclerview.UltimateRecyclerView>
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/article_list_adview"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:id="@+id/article_list_adview_container"
         android:layout_alignParentBottom="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
-    </com.google.android.gms.ads.AdView>
+        android:layout_centerHorizontal="true"
+        android:visibility="gone">
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/article_list_adview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id"
+            android:layout_gravity="center_horizontal">
+        </com.google.android.gms.ads.AdView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/article_list_adview_close"
+            android:layout_gravity="left|top"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="#000000" />
+    </FrameLayout>
 
 
     <!--<com.malinskiy.superrecyclerview.SuperRecyclerView-->

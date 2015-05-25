@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v4.view.MenuItemCompat;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdListener;
 import com.google.gson.Gson;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -56,6 +59,8 @@ public class ArticleActivity extends AppCompatActivity implements
     @InjectView(R.id.article_publish_date) TextView mArticlePublishDate;
     @InjectView(R.id.header) ImageView mArticleHeader;
     @InjectView(R.id.article_scrollview) ObservableScrollable mScrollView;
+    @InjectView(R.id.article_adview_container) FrameLayout mAdviewContainer;
+    @InjectView(R.id.article_adview_close) ImageView mAdviewCloseButton;
     @InjectView(R.id.article_adview) AdView mAdview;
 
     Drawable mActionBarBackgroundDrawable;
@@ -68,6 +73,20 @@ public class ArticleActivity extends AppCompatActivity implements
 
         mAdRequest = new AdRequest.Builder().build();
         mAdview.loadAd(mAdRequest);
+        mAdview.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mAdviewContainer.setVisibility(FrameLayout.VISIBLE);
+            }
+        });
+        mAdviewCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdview.destroy();
+                mAdviewContainer.setVisibility(FrameLayout.GONE);
+            }
+        });
 
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);

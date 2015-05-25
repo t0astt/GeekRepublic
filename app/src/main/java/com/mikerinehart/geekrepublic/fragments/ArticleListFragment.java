@@ -17,8 +17,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.gson.Gson;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -44,6 +47,8 @@ import retrofit.client.Response;
 
 public class ArticleListFragment extends Fragment {
     @InjectView(R.id.home_recyclerview) UltimateRecyclerView ultimateRecyclerView;
+    @InjectView(R.id.article_list_adview_container) FrameLayout mAdviewContainer;
+    @InjectView(R.id.article_list_adview_close) ImageView mAdviewCloseButton;
     @InjectView(R.id.article_list_adview) AdView mAdview;
 
     private LinearLayoutManager mLayoutManager;
@@ -99,6 +104,20 @@ public class ArticleListFragment extends Fragment {
         setActionbarTitle();
         ButterKnife.inject(this, view);
         mAdview.loadAd(mAdRequest);
+        mAdview.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mAdviewContainer.setVisibility(FrameLayout.VISIBLE);
+            }
+        });
+        mAdviewCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdview.destroy();
+                mAdviewContainer.setVisibility(FrameLayout.GONE);
+            }
+        });
 
         ultimateRecyclerView.setAdapter(mAnimationAdapter);
         mLayoutManager = new LinearLayoutManager(ultimateRecyclerView.getContext());
