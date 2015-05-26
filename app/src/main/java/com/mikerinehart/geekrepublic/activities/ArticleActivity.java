@@ -178,7 +178,7 @@ public class ArticleActivity extends AppCompatActivity implements
         // If article is found in SP, then it is favorited so set it checked
         if (favoriteArticleSharedPreferences.contains(Integer.toString(article.getId()))) {
             favoriteArticleMenuItem.setChecked(true);
-            favoriteArticleMenuItem.setIcon(getResources().getDrawable(R.drawable.ic_star_white));
+            favoriteArticleMenuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite));
         }
         return(super.onCreateOptionsMenu(menu));
     }
@@ -193,7 +193,7 @@ public class ArticleActivity extends AppCompatActivity implements
 
                     favoriteArticleSharedPreferencesEditor.putString(Integer.toString(article.getId()), gson.toJson(article));
                     favoriteArticleSharedPreferencesEditor.apply();
-                    item.setIcon(getResources().getDrawable(R.drawable.ic_star_white));
+                    item.setIcon(getResources().getDrawable(R.drawable.ic_favorite));
                     Toast.makeText(getApplicationContext(), "Article Favorited!", Toast.LENGTH_SHORT).show();
 
                 } else {
@@ -201,7 +201,7 @@ public class ArticleActivity extends AppCompatActivity implements
                     item.setChecked(false);
                     favoriteArticleSharedPreferencesEditor.remove(Integer.toString(article.getId()));
                     favoriteArticleSharedPreferencesEditor.apply();
-                    item.setIcon(getResources().getDrawable(R.drawable.ic_star_outline_white));
+                    item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_outline));
                     Toast.makeText(getApplicationContext(), "Article Unfavorited!", Toast.LENGTH_SHORT).show();
                 }
                 return true;

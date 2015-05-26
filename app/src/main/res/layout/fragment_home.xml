@@ -12,8 +12,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/home_recyclerview"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="false"
         android:layout_alignParentTop="false"
         android:layout_alignParentBottom="false"
         android:layout_above="@+id/article_list_adview_container">
@@ -46,14 +44,5 @@
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:background="#000000" />
     </FrameLayout>
-
-
-    <!--<com.malinskiy.superrecyclerview.SuperRecyclerView-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="fill_parent"-->
-        <!--android:id="@+id/home_recyclerview"-->
-        <!--app:layout_moreProgress="@layout/view_more_progress" >-->
-    <!--</com.malinskiy.superrecyclerview.SuperRecyclerView>-->
-
 
 </RelativeLayout>
