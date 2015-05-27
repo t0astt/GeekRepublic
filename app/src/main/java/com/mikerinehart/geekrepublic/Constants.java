@@ -17,6 +17,8 @@ public class Constants {
     public static final int CATEGORY_GADGETS = 7;
     public static final int CATEGORY_FAVORITES = 8;
 
+    public static final String CONTACT_EMAIL = "support@geekrepublic.org";
+
     public static final String SHARED_PREFERENCES_FAVORITE_ARTICLE = "com.mikerinehart.GeekRepublic.favoritearticle";
 
     public static final String SOCIAL_TWITTER_BROWSER_URI = "https://twitter.com/GeekRep";

@@ -192,7 +192,8 @@ public class MainActivity extends AppCompatActivity implements
                                     break;
                                 // Contact Us
                                 case 12:
-                                    
+                                    Intent intent = new Intent(getApplicationContext(), ContactActivity.class);
+                                    startActivity(intent); // TODO: Find more compatible method
                                     break;
                             }
                         }
