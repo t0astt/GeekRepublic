@@ -33,6 +33,7 @@ import com.mikerinehart.geekrepublic.adapters.ArticleAdapter;
 import com.mikerinehart.geekrepublic.interfaces.ApiService;
 import com.mikerinehart.geekrepublic.models.Post;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -116,9 +117,10 @@ public class ArticleListFragment extends Fragment {
             }
         });
         mAdapter = new ArticleAdapter();
-        mAnimationAdapter = new ScaleInAnimationAdapter(mAdapter);
+        ultimateRecyclerView.setAdapter(mAdapter);
+        //mAnimationAdapter = new ScaleInAnimationAdapter(mAdapter);
 
-        ultimateRecyclerView.setAdapter(mAnimationAdapter);
+        //ultimateRecyclerView.setAdapter(mAnimationAdapter);
         mLayoutManager = new LinearLayoutManager(ultimateRecyclerView.getContext());
         ultimateRecyclerView.setLayoutManager(mLayoutManager);
         if (mCategory != 8) {
@@ -245,10 +247,10 @@ public class ArticleListFragment extends Fragment {
     private void displayArticles(List<Post> articles) {
         for (int i = 0; i < articles.size(); i++) {
             mAdapter.insert(articles.get(i), mAdapter.getAdapterItemCount());
-            mAnimationAdapter.notifyDataSetChanged();
+            //mAnimationAdapter.notifyDataSetChanged();
         }
         mAdapter.notifyDataSetChanged();
-        mAnimationAdapter.notifyDataSetChanged();
+//        mAnimationAdapter.notifyDataSetChanged();
     }
 
     /*
