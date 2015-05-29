@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements
     @InjectView(R.id.toolbar) public Toolbar toolbar;
 
     private int mFavoriteArticleCount = 0;
-    private Drawer.Result mDrawer;
+    private Drawer mDrawer;
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements
         favoriteArticleSharedPreferences = this.getSharedPreferences(Constants.SHARED_PREFERENCES_FAVORITE_ARTICLE, Context.MODE_PRIVATE);
         favoriteArticleSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        mDrawer = new Drawer()
+        mDrawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .addDrawerItems(
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
+                    public boolean onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
                         if (drawerItem instanceof Nameable) {
                             Toast.makeText(getApplicationContext(), MainActivity.this.getString(((Nameable) drawerItem).getNameRes()), Toast.LENGTH_SHORT).show(); // TODO: For debugging purposes
                             FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -197,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements
                                     break;
                             }
                         }
+                        return false;
                     }
                 })
                 .build();

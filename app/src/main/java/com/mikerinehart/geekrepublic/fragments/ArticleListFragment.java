@@ -183,7 +183,6 @@ public class ArticleListFragment extends Fragment {
 
             }
         });
-
         getArticles();
         return view;
     }
