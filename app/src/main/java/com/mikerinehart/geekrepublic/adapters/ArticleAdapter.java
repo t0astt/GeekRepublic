@@ -1,5 +1,7 @@
 package com.mikerinehart.geekrepublic.adapters;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -7,11 +9,14 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.marshalchen.ultimaterecyclerview.UltimateViewAdapter;
+import com.marshalchen.ultimaterecyclerview.animators.internal.ViewHelper;
 import com.mikerinehart.geekrepublic.R;
 import com.mikerinehart.geekrepublic.models.Post;
 
@@ -26,6 +31,12 @@ public class ArticleAdapter extends UltimateViewAdapter {
 
     private List<Post> articleList;
     private Context mContext;
+
+    private int mDuration = 300;
+    private Interpolator mInterpolator = new LinearInterpolator();
+    private int mLastPosition = 5;
+
+    private boolean isFirstOnly = true;
 
     public ArticleAdapter() {
         this.articleList = new ArrayList<>();
@@ -46,6 +57,15 @@ public class ArticleAdapter extends UltimateViewAdapter {
             Glide.with(mContext).load(p.getFeaturedImage().getSourceURL())
                     .into(((ViewHolder)holder).featuredImage);
             ((ViewHolder)holder).postTitle.setText(Html.fromHtml(p.getTitle()));
+        }
+        if (!isFirstOnly || position > mLastPosition) {
+            for (Animator anim : getAdapterAnimations(holder.itemView, AdapterAnimationType.ScaleIn)) {
+                anim.setDuration(mDuration).start();
+                anim.setInterpolator(mInterpolator);
+            }
+            mLastPosition = position;
+        } else {
+            ViewHelper.clear(holder.itemView);
         }
     }
 
@@ -147,6 +167,36 @@ public class ArticleAdapter extends UltimateViewAdapter {
 //        });
 //    }
 
+    /**
+     * Animations when loading the adapter
+     *
+     * @param view
+     * @param type
+     * @return
+     */
+    protected Animator[] getAdapterAnimations(View view, AdapterAnimationType type) {
+        if (type == AdapterAnimationType.ScaleIn) {
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", .5f, 1f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", .5f, 1f);
+            return new ObjectAnimator[]{scaleX, scaleY};
+        } else if (type == AdapterAnimationType.AlphaIn) {
+            return new Animator[]{ObjectAnimator.ofFloat(view, "alpha", .5f, 1f)};
+        } else if (type == AdapterAnimationType.SlideInBottom) {
+            return new Animator[]{
+                    ObjectAnimator.ofFloat(view, "translationY", view.getMeasuredHeight(), 0)
+            };
+        } else if (type == AdapterAnimationType.SlideInLeft) {
+            return new Animator[]{
+                    ObjectAnimator.ofFloat(view, "translationX", -view.getRootView().getWidth(), 0)
+            };
+        } else if (type == AdapterAnimationType.SlideInRight) {
+            return new Animator[]{
+                    ObjectAnimator.ofFloat(view, "translationX", view.getRootView().getWidth(), 0)
+            };
+        }
+        return null;
+    }
+
 
     class ViewHolder extends UltimateViewAdapter.UltimateRecyclerviewViewHolder {
 
@@ -167,76 +217,5 @@ public class ArticleAdapter extends UltimateViewAdapter {
             return articleList.get(position);
         else return null;
     }
-
-
-//    private final String TAG = "NewsItemAdapter";
-//    private List<Post> postList;
-//    private Context c;
-//
-//    public ArticleAdapter() {
-//        postList = new ArrayList<>();
-//    }
-//
-//    public ArticleAdapter(List<Post> postList) {
-//        this.postList = postList;
-//    }
-//
-//    public void insert(Post p) {
-//        //insert(postList, p, getAdapterItemCount());
-//        postList.add(p);
-//    }
-//
-//    public void clear() {
-//        postList.clear();
-//    }
-//
-//    @Override
-//    public long getItemId(int position) {
-//        return position;
-//    }
-//
-//    public Post getPost(int position) {
-//        return postList.get(position);
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(RecyclerView.ViewHolder vh, int i) {
-//            // Try catch required to handle instance where "load more" view is injected and cannot be cast
-//            try {
-//                Post p = postList.get(i);
-//                Glide.with(c).load(p.getFeaturedImage().getSourceURL())
-//                        .into(((ViewHolder)vh).featuredImage);
-//                ((ViewHolder)vh).postTitle.setText(Html.fromHtml(p.getTitle()));
-//            } catch (ClassCastException e) {
-//                e.printStackTrace();
-//            } catch (IndexOutOfBoundsException e) {
-//
-//            }
-//    }
-//
-//    @Override
-//    public int getAdapterItemCount() {
-//        return postList.size();
-//    }
-//
-//
-//    @Override
-//    public UltimateRecyclerviewViewHolder onCreateViewHolder(ViewGroup viewGroup) {
-//        this.c = viewGroup.getContext();
-//        View itemView = LayoutInflater.from(c).inflate(R.layout.post_card_layout, viewGroup, false);
-//        return new ViewHolder(itemView);
-//    }
-//
-//    class ViewHolder extends UltimateRecyclerviewViewHolder {
-//        @InjectView(R.id.post_card) protected CardView postCard;
-//        @InjectView(R.id.post_card_layout_post_title) protected TextView postTitle;
-//        @InjectView(R.id.post_card_layout_featured_image) protected ImageView featuredImage;
-//
-//        public ViewHolder(View v) {
-//            super(v);
-//            ButterKnife.inject(this, v);
-//        }
-//
-//    }
 
 }

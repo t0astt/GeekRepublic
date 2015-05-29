@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
+import com.marshalchen.ultimaterecyclerview.animators.ScaleInAnimator;
 import com.mikerinehart.geekrepublic.Constants;
 import com.mikerinehart.geekrepublic.R;
 import com.mikerinehart.geekrepublic.RestClient;
@@ -118,7 +119,9 @@ public class ArticleListFragment extends Fragment {
         });
         mAdapter = new ArticleAdapter();
         ultimateRecyclerView.setAdapter(mAdapter);
+        //ultimateRecyclerView.setItemAnimator(new ScaleInAnimator());
         //mAnimationAdapter = new ScaleInAnimationAdapter(mAdapter);
+
 
         //ultimateRecyclerView.setAdapter(mAnimationAdapter);
         mLayoutManager = new LinearLayoutManager(ultimateRecyclerView.getContext());
@@ -301,6 +304,7 @@ public class ArticleListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        mPageNumber = 1;
         // If resuming the fragment from a favorited article view, we should check to see if it's still a favorited article
         // Clear the adapter and grab new ones, otherwise we might display duplicates
         if (mCategory == 8) {
