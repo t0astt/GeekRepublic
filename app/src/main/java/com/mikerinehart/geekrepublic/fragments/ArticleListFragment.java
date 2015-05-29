@@ -88,8 +88,6 @@ public class ArticleListFragment extends Fragment {
         favoriteArticleSharedPreferences = getActivity().getSharedPreferences(Constants.SHARED_PREFERENCES_FAVORITE_ARTICLE, Context.MODE_PRIVATE);
         mRestClient = new RestClient();
         mApiService = mRestClient.getApiService();
-        mAdapter = new ArticleAdapter();
-        mAnimationAdapter = new ScaleInAnimationAdapter(mAdapter);
         mAdRequest = new AdRequest.Builder().build();
 
         Log.i("ArticleListFragment", "Running onCreate");
@@ -117,6 +115,8 @@ public class ArticleListFragment extends Fragment {
                 mAdviewContainer.setVisibility(FrameLayout.GONE);
             }
         });
+        mAdapter = new ArticleAdapter();
+        mAnimationAdapter = new ScaleInAnimationAdapter(mAdapter);
 
         ultimateRecyclerView.setAdapter(mAnimationAdapter);
         mLayoutManager = new LinearLayoutManager(ultimateRecyclerView.getContext());
@@ -130,7 +130,7 @@ public class ArticleListFragment extends Fragment {
                     getArticles();
                 }
             });
-            mAdapter.setCustomLoadMoreView(inflater.inflate(R.layout.view_more_progress, null));
+            mAdapter.setCustomLoadMoreView(LayoutInflater.from(ultimateRecyclerView.getContext()).inflate(R.layout.view_more_progress, null));
             ultimateRecyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
@@ -156,7 +156,12 @@ public class ArticleListFragment extends Fragment {
                 if (child != null && mGestureDetector.onTouchEvent(e)) {
                     int itemClicked = rv.getChildPosition(child);
 
-                    Post p = mAdapter.getPost(itemClicked);
+                    Post p = null;
+                    try {
+                        p = mAdapter.getItem(itemClicked);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
                     String postJson = gson.toJson(p);
                     Intent intent = new Intent(getActivity(), ArticleActivity.class);
                     intent.putExtra("post", postJson);
@@ -185,6 +190,7 @@ public class ArticleListFragment extends Fragment {
         Callback<List<Post>> callback = new Callback<List<Post>>() {
             @Override
             public void success(List<Post> posts, Response response) {
+                ultimateRecyclerView.setRefreshing(false);
                 displayArticles(posts);
             }
 
@@ -237,12 +243,12 @@ public class ArticleListFragment extends Fragment {
      * Takes a list of articles and iterates through them, inserting them into the adapter
      */
     private void displayArticles(List<Post> articles) {
-        if (mAdapter.getAdapterItemCount() == 0) {
-            ultimateRecyclerView.setAdapter(mAnimationAdapter);
-        }
         for (int i = 0; i < articles.size(); i++) {
-            mAdapter.insert(articles.get(i));
+            mAdapter.insert(articles.get(i), mAdapter.getAdapterItemCount());
+            mAnimationAdapter.notifyDataSetChanged();
         }
+        mAdapter.notifyDataSetChanged();
+        mAnimationAdapter.notifyDataSetChanged();
     }
 
     /*
