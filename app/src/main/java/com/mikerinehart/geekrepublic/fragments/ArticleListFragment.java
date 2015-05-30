@@ -30,6 +30,7 @@ import com.mikerinehart.geekrepublic.Constants;
 import com.mikerinehart.geekrepublic.R;
 import com.mikerinehart.geekrepublic.RestClient;
 import com.mikerinehart.geekrepublic.activities.ArticleActivity;
+import com.mikerinehart.geekrepublic.activities.MainActivity;
 import com.mikerinehart.geekrepublic.adapters.ArticleAdapter;
 import com.mikerinehart.geekrepublic.interfaces.ApiService;
 import com.mikerinehart.geekrepublic.models.Post;
