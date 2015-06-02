@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -38,10 +40,12 @@ public class MainActivity extends AppCompatActivity implements
         ArticleListFragment.OnFragmentInteractionListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    SharedPreferences favoriteArticleSharedPreferences;
-
     @InjectView(R.id.toolbar) public Toolbar toolbar;
 
+    public static GoogleAnalytics analytics;
+    public static Tracker tracker;
+
+    SharedPreferences favoriteArticleSharedPreferences;
     private int mFavoriteArticleCount = 0;
     private Drawer mDrawer;
 
@@ -54,6 +58,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        analytics = GoogleAnalytics.getInstance(this);
+        analytics.setLocalDispatchPeriod(1800);
+        tracker = analytics.newTracker(getResources().getString(R.string.analytics_tracking_id)); // Replace with actual tracker/property Id
+        tracker.enableExceptionReporting(true);
+        tracker.enableAdvertisingIdCollection(true);
+        tracker.enableAutoActivityTracking(true);
+
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         setSupportActionBar(toolbar);
