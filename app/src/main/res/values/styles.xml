@@ -10,8 +10,8 @@
     <!-- Article Activity Theme. Uses transparent toolbar -->
     <style name="ArticleViewTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
-        <item name="windowActionBar">false</item>
-        <item name="android:fitsSystemWindows">true</item>
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="android:fitsSystemWindows">true</item>-->
 
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.google.android.gms.ads.AdListener;
 import com.google.gson.Gson;
 import com.google.android.gms.ads.AdRequest;
@@ -42,20 +43,19 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import jp.wasabeef.recyclerview.animators.adapters.ScaleInAnimationAdapter;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class ArticleListFragment extends Fragment {
     @InjectView(R.id.home_recyclerview) UltimateRecyclerView ultimateRecyclerView;
+    @InjectView(R.id.article_list_progress) ProgressBarCircularIndeterminate mCircularIndeterminate;
     @InjectView(R.id.article_list_adview_container) FrameLayout mAdviewContainer;
     @InjectView(R.id.article_list_adview_close) ImageView mAdviewCloseButton;
     @InjectView(R.id.article_list_adview) AdView mAdview;
 
     private LinearLayoutManager mLayoutManager;
     private ArticleAdapter mAdapter;
-    private ScaleInAnimationAdapter mAnimationAdapter;
     private RestClient mRestClient;
     private ApiService mApiService;
     private AdRequest mAdRequest;
@@ -103,6 +103,7 @@ public class ArticleListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         setActionbarTitle();
         ButterKnife.inject(this, view);
+        mCircularIndeterminate.setVisibility(ProgressBarCircularIndeterminate.VISIBLE);
         mAdview.loadAd(mAdRequest);
         mAdview.setAdListener(new AdListener() {
             @Override
@@ -120,11 +121,6 @@ public class ArticleListFragment extends Fragment {
         });
         mAdapter = new ArticleAdapter();
         ultimateRecyclerView.setAdapter(mAdapter);
-        //ultimateRecyclerView.setItemAnimator(new ScaleInAnimator());
-        //mAnimationAdapter = new ScaleInAnimationAdapter(mAdapter);
-
-
-        //ultimateRecyclerView.setAdapter(mAnimationAdapter);
         mLayoutManager = new LinearLayoutManager(ultimateRecyclerView.getContext());
         ultimateRecyclerView.setLayoutManager(mLayoutManager);
         if (mCategory != 8) {
@@ -197,12 +193,14 @@ public class ArticleListFragment extends Fragment {
             public void success(List<Post> posts, Response response) {
                 ultimateRecyclerView.setRefreshing(false);
                 displayArticles(posts);
+                mCircularIndeterminate.setVisibility(ProgressBarCircularIndeterminate.GONE);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Toast.makeText(getActivity(), "Failed to fetch articles. Please try again!", Toast.LENGTH_SHORT).show();
                 ultimateRecyclerView.setRefreshing(false);
+                mCircularIndeterminate.setVisibility(ProgressBarCircularIndeterminate.GONE);
             }
         };
 
@@ -250,10 +248,8 @@ public class ArticleListFragment extends Fragment {
     private void displayArticles(List<Post> articles) {
         for (int i = 0; i < articles.size(); i++) {
             mAdapter.insert(articles.get(i), mAdapter.getAdapterItemCount());
-            //mAnimationAdapter.notifyDataSetChanged();
         }
         mAdapter.notifyDataSetChanged();
-//        mAnimationAdapter.notifyDataSetChanged();
     }
 
     /*
