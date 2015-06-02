@@ -1,45 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="fill_parent"
-    android:layout_width="fill_parent" >
-
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-
 
     <view
         class="com.mikerinehart.geekrepublic.activities.ArticleActivity$ObservableWebView"
         android:id="@+id/web_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
         android:layout_marginTop="55dp" />
-
 
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
         android:layout_marginTop="55dp">
 
         <ImageView
             android:id="@+id/featured_image"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="154dp"
-            android:background="#FFFFFF"
-            android:scaleType="centerCrop"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-
-
+            android:scaleType="centerCrop" />
         <LinearLayout
             android:id="@+id/header_text"
             android:layout_width="match_parent"
@@ -47,42 +30,68 @@
             android:layout_below="@+id/featured_image"
             android:orientation="vertical"
             android:background="#FFFFFF"
-            android:padding="8dp">
-
+            android:padding="8dp"
+            >
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:textAppearanceLarge"
-                android:text="Article Title" />
-
+                android:text="Article Title"
+                />
             <TextView
                 android:id="@+id/author"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:textColorSecondary"
-                android:text="Author" />
-
+                android:text="Author"
+                />
             <TextView
                 android:id="@+id/pub_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:textColorSecondary"
-                android:text="Publish Date" />
-
+                android:text="Publish Date"
+                />
         </LinearLayout>
-
     </RelativeLayout>
-
-</FrameLayout>
-
-    <include layout="@layout/toolbar"
-        android:id="@+id/toolbar"></include>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:background="@drawable/toolbar_shadow"
-        android:layout_below="@+id/toolbar" />
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="55dp" />
 
-</RelativeLayout>
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar"></include>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/article_adview_container"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:layout_gravity="bottom|center_horizontal">
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/article_adview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id"
+            android:layout_gravity="center_horizontal">
+        </com.google.android.gms.ads.AdView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/article_adview_close"
+            android:layout_gravity="left|top"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="#000000" />
+    </FrameLayout>
+</FrameLayout>

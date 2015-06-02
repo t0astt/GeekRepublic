@@ -238,6 +238,7 @@ public class ArticleListFragment extends Fragment {
                     articleList.add(p);
                 }
                 displayArticles(articleList);
+                mCircularIndeterminate.setVisibility(ProgressBarCircularIndeterminate.GONE);
                 break;
         }
     }

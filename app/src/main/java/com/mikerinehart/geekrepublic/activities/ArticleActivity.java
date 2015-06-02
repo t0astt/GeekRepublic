@@ -17,11 +17,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 import com.mikerinehart.geekrepublic.Constants;
@@ -41,6 +45,10 @@ public class ArticleActivity extends AppCompatActivity implements ShareActionPro
     @InjectView(R.id.title) TextView mArticleTitle;
     @InjectView(R.id.author) TextView mArticleAuthor;
     @InjectView(R.id.pub_date) TextView mArticleDate;
+    @InjectView(R.id.article_adview_container) FrameLayout mAdviewContainer;
+    @InjectView(R.id.article_adview_close) ImageView mAdviewCloseButton;
+    @InjectView(R.id.article_adview) AdView mAdview;
+
 
     private int mHeaderHeight;
 
@@ -54,6 +62,8 @@ public class ArticleActivity extends AppCompatActivity implements ShareActionPro
     private ShareActionProvider mShareActionProvider = null;
     private Intent mShareIntent;
 
+    private AdRequest mAdRequest;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +74,23 @@ public class ArticleActivity extends AppCompatActivity implements ShareActionPro
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mAdRequest = new AdRequest.Builder().build();
+        mAdview.loadAd(mAdRequest);
+        mAdview.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mAdviewContainer.setVisibility(FrameLayout.VISIBLE);
+            }
+        });
+        mAdviewCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdview.destroy();
+                mAdviewContainer.setVisibility(FrameLayout.GONE);
+            }
+        });
 
 
         mShareIntent = new Intent();
@@ -99,6 +126,7 @@ public class ArticleActivity extends AppCompatActivity implements ShareActionPro
                 applyHeaderHeightToWebViewContent();
             }
         });
+        mWebView.getSettings().setJavaScriptEnabled(true);
         SimpleDateFormat df = new SimpleDateFormat("MMMM d', 'yyyy");
 
         Glide.with(mFeaturedImage.getContext())
@@ -109,8 +137,19 @@ public class ArticleActivity extends AppCompatActivity implements ShareActionPro
         mArticleDate.setText("Published: " + df.format(mArticle.getDateCreated()));
 
         StringBuilder sb = new StringBuilder();
-        sb.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0,target-densityDpi=device-dpi\">");
+        //sb.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0,target-densityDpi=device-dpi\">");
+        sb.append("<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "\t<head>\n" +
+                "\t\t<meta charset=\"utf-8\">\n" +
+                "\t\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                "\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+                "\t\t<title>Page title</title>\n" +
+                "\t</head>\n" +
+                "\t<body>");
         sb.append(mArticle.getContent());
+        sb.append("</body>\n" +
+                "</html>");
         mWebView.loadData(sb.toString(), "text/html; charset=UTF-8", null);
     }
 
