@@ -10,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,17 +25,14 @@ import com.google.gson.Gson;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
-import com.marshalchen.ultimaterecyclerview.animators.ScaleInAnimator;
 import com.mikerinehart.geekrepublic.Constants;
 import com.mikerinehart.geekrepublic.R;
 import com.mikerinehart.geekrepublic.RestClient;
 import com.mikerinehart.geekrepublic.activities.ArticleActivity;
-import com.mikerinehart.geekrepublic.activities.MainActivity;
 import com.mikerinehart.geekrepublic.adapters.ArticleAdapter;
 import com.mikerinehart.geekrepublic.interfaces.ApiService;
 import com.mikerinehart.geekrepublic.models.Post;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -92,14 +88,11 @@ public class ArticleListFragment extends Fragment {
         mRestClient = new RestClient();
         mApiService = mRestClient.getApiService();
         mAdRequest = new AdRequest.Builder().build();
-
-        Log.i("ArticleListFragment", "Running onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("ArticleListFragment", "Running onCreateView");
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         setActionbarTitle();
         ButterKnife.inject(this, view);
@@ -198,7 +191,7 @@ public class ArticleListFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(getActivity(), "Failed to fetch articles. Please try again!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.article_failed_fetch), Toast.LENGTH_SHORT).show();
                 ultimateRecyclerView.setRefreshing(false);
                 mCircularIndeterminate.setVisibility(ProgressBarCircularIndeterminate.GONE);
             }
@@ -261,39 +254,57 @@ public class ArticleListFragment extends Fragment {
         switch (mCategory) {
             // Home
             case 0:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Home");
+                ((AppCompatActivity)getActivity())
+                        .getSupportActionBar()
+                        .setTitle(getResources().getString(R.string.navigation_drawer_home));
                 break;
             // News
             case 1:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("News");
+                ((AppCompatActivity)getActivity())
+                        .getSupportActionBar()
+                        .setTitle(getResources().getString(R.string.navigation_drawer_news));
                 break;
             // Security
             case 2:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Security");
+                ((AppCompatActivity)getActivity())
+                        .getSupportActionBar()
+                        .setTitle(getResources().getString(R.string.navigation_drawer_security));
                 break;
             // Gaming
             case 3:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Gaming");
+                ((AppCompatActivity)getActivity())
+                        .getSupportActionBar()
+                        .setTitle(getResources().getString(R.string.navigation_drawer_gaming));
                 break;
             // Mobile
             case 4:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Mobile");
+                ((AppCompatActivity)getActivity())
+                        .getSupportActionBar()
+                        .setTitle(getResources().getString(R.string.navigation_drawer_mobile));
                 break;
             // Technology
             case 5:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Technology");
+                ((AppCompatActivity)getActivity())
+                        .getSupportActionBar()
+                        .setTitle(getResources().getString(R.string.navigation_drawer_technology));
                 break;
             // Culture
             case 6:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Culture");
+                ((AppCompatActivity)getActivity())
+                        .getSupportActionBar()
+                        .setTitle(getResources().getString(R.string.navigation_drawer_culture));
                 break;
             // Gadgets
             case 7:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Gadgets");
+                ((AppCompatActivity)getActivity())
+                        .getSupportActionBar()
+                        .setTitle(getResources().getString(R.string.navigation_drawer_gadgets));
                 break;
             // Favorites
             case 8:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Favorites");
+                ((AppCompatActivity)getActivity())
+                        .getSupportActionBar()
+                        .setTitle(getResources().getString(R.string.navigation_drawer_favorites));
                 break;
         }
     }

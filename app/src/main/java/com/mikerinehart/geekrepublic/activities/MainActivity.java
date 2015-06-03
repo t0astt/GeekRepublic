@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        Log.i("MainActivity SP", "SharedPreferenceChanged Fired");
         mDrawer.updateBadge(Integer.toString(getFavoriteArticleCount()), 8);
     }
 
@@ -143,41 +141,48 @@ public class MainActivity extends AppCompatActivity implements
                                 case 2:
                                     ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_SECURITY));
                                     ft.addToBackStack("Security");
+                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     ft.commit();
                                     break;
                                 // Gaming
                                 case 3:
                                     ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_GAMING));
                                     ft.addToBackStack("Gaming");
+                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     ft.commit();
                                     break;
                                 // Mobile
                                 case 4:
                                     ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_MOBILE));
                                     ft.addToBackStack("Mobile");
+                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     ft.commit();
                                     break;
                                 // Technology
                                 case 5:
                                     ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_TECHNOLOGY));
                                     ft.addToBackStack("Technology");
+                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     ft.commit();
                                     break;
                                 // Culture
                                 case 6:
                                     ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_CULTURE));
                                     ft.addToBackStack("Culture");
+                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     ft.commit();
                                     break;
                                 // Gadgets
                                 case 7:
                                     ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_GADGETS));
                                     ft.addToBackStack("Gadgets");
+                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     ft.commit();
                                     break;
                                 case 8:
                                     ft.replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_FAVORITES));
                                     ft.addToBackStack("Favorites");
+                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                                     ft.commit();
                                     break;
                                 // Facebook

@@ -10,7 +10,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +26,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
-import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 import com.mikerinehart.geekrepublic.Constants;
 import com.mikerinehart.geekrepublic.R;
 import com.mikerinehart.geekrepublic.models.Post;
@@ -143,7 +141,6 @@ public class ArticleActivity extends AppCompatActivity implements ShareActionPro
         mArticleDate.setText("Published: " + df.format(mArticle.getDateCreated()));
 
         StringBuilder sb = new StringBuilder();
-        //sb.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0,target-densityDpi=device-dpi\">");
         sb.append("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "\t<head>\n" +
@@ -204,7 +201,7 @@ public class ArticleActivity extends AppCompatActivity implements ShareActionPro
                     mFavoriteArticleSharedPreferencesEditor.putString(Integer.toString(mArticle.getId()), mGson.toJson(mArticle));
                     mFavoriteArticleSharedPreferencesEditor.apply();
                     item.setIcon(getResources().getDrawable(R.drawable.ic_favorite));
-                    Toast.makeText(getApplicationContext(), "Article added to favorites!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.article_favorited), Toast.LENGTH_SHORT).show();
 
                 } else {
                     // Unfavorite article
@@ -212,7 +209,7 @@ public class ArticleActivity extends AppCompatActivity implements ShareActionPro
                     mFavoriteArticleSharedPreferencesEditor.remove(Integer.toString(mArticle.getId()));
                     mFavoriteArticleSharedPreferencesEditor.apply();
                     item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_outline));
-                    Toast.makeText(getApplicationContext(), "Article removed from favorites!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.article_unfavorited), Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case android.R.id.home:

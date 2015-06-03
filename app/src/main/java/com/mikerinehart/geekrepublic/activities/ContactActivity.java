@@ -33,7 +33,7 @@ public class ContactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contact);
         ButterKnife.inject(this);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Contact GeekRepublic");
+        getSupportActionBar().setTitle(getResources().getString(R.string.contact_geek_republic));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mSendEmailButton.setOnClickListener(new Button.OnClickListener() {
@@ -50,7 +50,7 @@ public class ContactActivity extends AppCompatActivity {
         String[] recipient = {Constants.CONTACT_EMAIL};
         StringBuilder subject = new StringBuilder();
         SimpleDateFormat df = new SimpleDateFormat("MMMM d', 'yyyy");
-        subject.append("GeekRepublic Message");
+        subject.append("Geek Republic Message");
         subject.append(" ");
         subject.append(df.format(new Date()));
 
@@ -62,7 +62,7 @@ public class ContactActivity extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_SUBJECT, subject.toString());
         intent.putExtra(Intent.EXTRA_TEXT, message);
 
-        startActivity(Intent.createChooser(intent, "Send Email"));
+        startActivity(Intent.createChooser(intent, getResources().getString(R.string.send_email_intent)));
     }
 
     @Override
