@@ -47,11 +47,16 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class ArticleListFragment extends Fragment {
-    @InjectView(R.id.home_recyclerview) UltimateRecyclerView ultimateRecyclerView;
-    @InjectView(R.id.article_list_progress) ProgressBarCircularIndeterminate mCircularIndeterminate;
-    @InjectView(R.id.article_list_adview_container) FrameLayout mAdviewContainer;
-    @InjectView(R.id.article_list_adview_close) ImageView mAdviewCloseButton;
-    @InjectView(R.id.article_list_adview) AdView mAdview;
+    @InjectView(R.id.home_recyclerview)
+    UltimateRecyclerView ultimateRecyclerView;
+    @InjectView(R.id.article_list_progress)
+    ProgressBarCircularIndeterminate mCircularIndeterminate;
+    @InjectView(R.id.article_list_adview_container)
+    FrameLayout mAdviewContainer;
+    @InjectView(R.id.article_list_adview_close)
+    ImageView mAdviewCloseButton;
+    @InjectView(R.id.article_list_adview)
+    AdView mAdview;
 
     private LinearLayoutManager mLayoutManager;
     private ArticleAdapter mAdapter;
@@ -69,7 +74,8 @@ public class ArticleListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public ArticleListFragment() {}
+    public ArticleListFragment() {
+    }
 
     public static ArticleListFragment newInstance(int category) {
         ArticleListFragment f = new ArticleListFragment();
@@ -154,30 +160,30 @@ public class ArticleListFragment extends Fragment {
                 if (child != null && mGestureDetector.onTouchEvent(e)) {
                     final int itemClicked = rv.getChildPosition(child);
 
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Post p = mAdapter.getItem(itemClicked);
-                                    String postJson = gson.toJson(p);
-                                    Intent intent = new Intent(getActivity(), ArticleActivity.class);
-                                    intent.putExtra("post", postJson);
-                                    Bundle b = new Bundle();
-                                    b.putString("post", postJson);
-                                    startActivity(intent, b); // TODO: Find more compatible method
-                                } catch (Exception e1) {
-                                    e1.printStackTrace();
-                                }
-                            }
-                        });
-                        return true;
+                    try {
+                        // Check to make sure item returned is a Post, not an injected "Loading" view
+                        if (mAdapter.getItem(itemClicked) instanceof Post) {
+                            Post p = mAdapter.getItem(itemClicked);
+                            String postJson = gson.toJson(p);
+                            Intent intent = new Intent(getActivity(), ArticleActivity.class);
+                            intent.putExtra("post", postJson);
+                            Bundle b = new Bundle();
+                            b.putString("post", postJson);
+                            startActivity(intent, b); // TODO: Find more compatible method
+                        }
+
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+
+
+                    return true;
                 }
                 return false;
             }
 
             @Override
             public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
             }
         });
         getArticles();
@@ -261,55 +267,55 @@ public class ArticleListFragment extends Fragment {
         switch (mCategory) {
             // Home
             case 0:
-                ((AppCompatActivity)getActivity())
+                ((AppCompatActivity) getActivity())
                         .getSupportActionBar()
                         .setTitle(getResources().getString(R.string.navigation_drawer_home));
                 break;
             // News
             case 1:
-                ((AppCompatActivity)getActivity())
+                ((AppCompatActivity) getActivity())
                         .getSupportActionBar()
                         .setTitle(getResources().getString(R.string.navigation_drawer_news));
                 break;
             // Security
             case 2:
-                ((AppCompatActivity)getActivity())
+                ((AppCompatActivity) getActivity())
                         .getSupportActionBar()
                         .setTitle(getResources().getString(R.string.navigation_drawer_security));
                 break;
             // Gaming
             case 3:
-                ((AppCompatActivity)getActivity())
+                ((AppCompatActivity) getActivity())
                         .getSupportActionBar()
                         .setTitle(getResources().getString(R.string.navigation_drawer_gaming));
                 break;
             // Mobile
             case 4:
-                ((AppCompatActivity)getActivity())
+                ((AppCompatActivity) getActivity())
                         .getSupportActionBar()
                         .setTitle(getResources().getString(R.string.navigation_drawer_mobile));
                 break;
             // Technology
             case 5:
-                ((AppCompatActivity)getActivity())
+                ((AppCompatActivity) getActivity())
                         .getSupportActionBar()
                         .setTitle(getResources().getString(R.string.navigation_drawer_technology));
                 break;
             // Culture
             case 6:
-                ((AppCompatActivity)getActivity())
+                ((AppCompatActivity) getActivity())
                         .getSupportActionBar()
                         .setTitle(getResources().getString(R.string.navigation_drawer_culture));
                 break;
             // Gadgets
             case 7:
-                ((AppCompatActivity)getActivity())
+                ((AppCompatActivity) getActivity())
                         .getSupportActionBar()
                         .setTitle(getResources().getString(R.string.navigation_drawer_gadgets));
                 break;
             // Favorites
             case 8:
-                ((AppCompatActivity)getActivity())
+                ((AppCompatActivity) getActivity())
                         .getSupportActionBar()
                         .setTitle(getResources().getString(R.string.navigation_drawer_favorites));
                 break;
@@ -353,6 +359,7 @@ public class ArticleListFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {}
+    public interface OnFragmentInteractionListener {
+    }
 
 }
