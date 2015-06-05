@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -121,7 +124,7 @@ public class ArticleListFragment extends Fragment {
             ultimateRecyclerView.setOnLoadMoreListener(new UltimateRecyclerView.OnLoadMoreListener() {
                 @Override
                 public void loadMore(int itemsCount, int maxLastVisiblePosition) {
-                    mPageNumber++;
+                    incrementPageNumber();
                     getArticles();
                 }
             });
@@ -129,7 +132,7 @@ public class ArticleListFragment extends Fragment {
             ultimateRecyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    mPageNumber = 1;
+                    resetPageNumber();
                     mAdapter.clear();
                     getArticles();
                 }
@@ -149,22 +152,26 @@ public class ArticleListFragment extends Fragment {
                 ViewGroup child = (ViewGroup) rv.findChildViewUnder(e.getX(), e.getY());
 
                 if (child != null && mGestureDetector.onTouchEvent(e)) {
-                    int itemClicked = rv.getChildPosition(child);
+                    final int itemClicked = rv.getChildPosition(child);
 
-                    Post p = null;
-                    try {
-                        p = mAdapter.getItem(itemClicked);
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                    String postJson = gson.toJson(p);
-                    Intent intent = new Intent(getActivity(), ArticleActivity.class);
-                    intent.putExtra("post", postJson);
-                    Bundle b = new Bundle();
-                    b.putString("post", postJson);
-                    startActivity(intent, b); // TODO: Find more compatible method
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Post p = mAdapter.getItem(itemClicked);
+                                    String postJson = gson.toJson(p);
+                                    Intent intent = new Intent(getActivity(), ArticleActivity.class);
+                                    intent.putExtra("post", postJson);
+                                    Bundle b = new Bundle();
+                                    b.putString("post", postJson);
+                                    startActivity(intent, b); // TODO: Find more compatible method
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                            }
+                        });
+                        return true;
                 }
-
                 return false;
             }
 
@@ -184,8 +191,8 @@ public class ArticleListFragment extends Fragment {
         Callback<List<Post>> callback = new Callback<List<Post>>() {
             @Override
             public void success(List<Post> posts, Response response) {
-                ultimateRecyclerView.setRefreshing(false);
                 displayArticles(posts);
+                ultimateRecyclerView.setRefreshing(false);
                 mCircularIndeterminate.setVisibility(ProgressBarCircularIndeterminate.GONE);
             }
 
@@ -309,10 +316,18 @@ public class ArticleListFragment extends Fragment {
         }
     }
 
+    private void resetPageNumber() {
+        mPageNumber = 1;
+    }
+
+    private void incrementPageNumber() {
+        mPageNumber += 1;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        mPageNumber = 1;
+        resetPageNumber();
         // If resuming the fragment from a favorited article view, we should check to see if it's still a favorited article
         // Clear the adapter and grab new ones, otherwise we might display duplicates
         if (mCategory == 8) {

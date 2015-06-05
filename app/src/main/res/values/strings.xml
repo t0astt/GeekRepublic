@@ -24,20 +24,18 @@
     <string name="article_unfavorited">Article removed from favorites!</string>
     <string name="actionbar_share">Share</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
 <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_article">ArticleActivity</string>
-
-    <!-- <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string> TEST ADS -->
-    <string name="banner_ad_unit_id">ca-app-pub-9628651325522541/8674427078</string>
-    <string name="analytics_tracking_id">UA-41612435-1</string>
-
     <string name="title_activity_contact">ContactActivity</string>
+
     <string name="send_email_intent">Send Email</string>
 
     <string name="contact_information">Have a comment, question, or tip to share with us? Fill out the field above and press Send Email to let us know!</string>
     <string name="copyright">\u00A9 2015 Geek Republic\nApp by Mike Rinehart (t0astt93@gmail.com)</string>
+
+    <!-- <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string> TEST ADS -->
+    <string name="banner_ad_unit_id">ca-app-pub-9628651325522541/8674427078</string>
+    <string name="analytics_tracking_id">UA-41612435-1</string>
 </resources>

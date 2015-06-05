@@ -10,6 +10,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -123,9 +124,10 @@ public class ArticleActivity extends AppCompatActivity implements ShareActionPro
             public void onPageFinished(WebView view, String url) {
                 applyHeaderHeightToWebViewContent();
             }
+
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(url));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
                 return true;
             }
@@ -136,7 +138,7 @@ public class ArticleActivity extends AppCompatActivity implements ShareActionPro
         Glide.with(mFeaturedImage.getContext())
                 .load(mArticle.getFeaturedImage().getSourceURL())
                 .into(mFeaturedImage);
-        mArticleTitle.setText(mArticle.getTitle());
+        mArticleTitle.setText(Html.fromHtml(mArticle.getTitle()));
         mArticleAuthor.setText("By: " + mArticle.getAuthor().getName());
         mArticleDate.setText("Published: " + df.format(mArticle.getDateCreated()));
 
