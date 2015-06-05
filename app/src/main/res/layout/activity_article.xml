@@ -30,8 +30,10 @@
             android:layout_below="@+id/featured_image"
             android:orientation="vertical"
             android:background="#FFFFFF"
-            android:padding="8dp"
-            >
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp">
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"

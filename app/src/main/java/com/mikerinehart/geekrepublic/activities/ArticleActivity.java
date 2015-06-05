@@ -151,7 +151,7 @@ public class ArticleActivity extends AppCompatActivity implements ShareActionPro
                 "\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
                 "\t\t<title>Page title</title>\n" +
                 "\t</head>\n" +
-                "\t<body>");
+                "\t<body style=\"padding:0 8px 0px 8px;\">");
         sb.append(mArticle.getContent());
         sb.append("</body>\n" +
                 "</html>");
