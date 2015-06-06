@@ -42,10 +42,6 @@ public class ArticleAdapter extends UltimateViewAdapter {
         this.articleList = new ArrayList<>();
     }
 
-//    public ArticleAdapter(List<Post> articleList) {
-//        this.articleList = articleList;
-//    }
-
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
@@ -54,8 +50,12 @@ public class ArticleAdapter extends UltimateViewAdapter {
                 && (customHeaderView != null ? position > 0 : true)) {
             Post p = articleList.get(position);
             ((ViewHolder)holder).postTitle.setText(Html.fromHtml(p.getTitle()));
-            Glide.with(mContext).load(p.getFeaturedImage().getSourceURL())
-                    .into(((ViewHolder)holder).featuredImage);
+            try {
+                Glide.with(mContext).load(p.getFeaturedImage().getSourceURL())
+                        .into(((ViewHolder) holder).featuredImage);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
             ((ViewHolder)holder).postTitle.setText(Html.fromHtml(p.getTitle()));
         }
         if (!isFirstOnly || position > mLastPosition) {

@@ -7,8 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Handler;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -56,13 +56,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        analytics = GoogleAnalytics.getInstance(this);
-        analytics.setLocalDispatchPeriod(1800);
-        tracker = analytics.newTracker(getResources().getString(R.string.analytics_tracking_id)); // Replace with actual tracker/property Id
-        tracker.enableExceptionReporting(true);
-        tracker.enableAdvertisingIdCollection(true);
-        tracker.enableAutoActivityTracking(true);
 
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
@@ -220,14 +213,23 @@ public class MainActivity extends AppCompatActivity implements
                 })
                 .build();
 
-        new Handler().post(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_HOME))
-                        .commit();
+                analytics = GoogleAnalytics.getInstance(getApplicationContext());
+                analytics.setLocalDispatchPeriod(1800);
+                tracker = analytics.newTracker(getResources().getString(R.string.analytics_tracking_id)); // Replace with actual tracker/property Id
+                tracker.enableExceptionReporting(true);
+                tracker.enableAdvertisingIdCollection(true);
+                tracker.enableAutoActivityTracking(true);
             }
-        });
+        }, 1000);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.layout_container, ArticleListFragment.newInstance(Constants.CATEGORY_HOME))
+                .commit();
+
+
     }
 
     private int getFavoriteArticleCount() {
