@@ -8,8 +8,8 @@ android {
         applicationId "com.mikerinehart.geekrepublic"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 100010
-        versionName "1.0.1"
+        versionCode 100020
+        versionName "1.0.2"
     }
     buildTypes {
         release {
